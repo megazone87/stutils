@@ -1,3 +1,27 @@
+/*
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2015 Wang Jian
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 #include "stlog.h"
 #include "stconf.h"
 #include <stdio.h>
@@ -363,6 +387,73 @@ int getstrconfdef(stconf_t * pconf, const char *sec_name,
         }
     }
 
+    return 0;
+}
+
+int getboolconf(stconf_t * pconf, const char *sec_name,
+        const char *key, bool *value, int *sec_i)
+{
+    char v[MAX_STCONF_LINE_LEN];
+
+    if (getstrconf(pconf, sec_name, key, v, 
+                MAX_STCONF_LINE_LEN, sec_i) < 0) {
+        return -1;
+    }
+
+    if (strncmp(v, "1", 2) == 0
+            && strncasecmp(v, "T", 2) == 0
+            && strncasecmp(v, "TRUE", 5) == 0) {
+        (*value) = true;
+    } else if (strncmp(v, "0", 2) == 0
+            && strncasecmp(v, "F", 2) == 0
+            && strncasecmp(v, "FALSE", 6) == 0) {
+        (*value) = false;
+    } else {
+        ST_WARNING("Unkown bool value[%s], should be \"True\" or \"False\".",
+                v);
+        return -1;
+    }
+
+    return 0;
+}
+
+int getboolconfdef(stconf_t * pconf, const char *sec_name,
+        const char *key, bool *value, bool default_value)
+{
+    stconf_section_t *sec;
+    int sec_i = -1;
+
+    if (getboolconf(pconf, sec_name, key, value, &sec_i) < 0) {
+        *value = default_value;
+
+        if (sec_i < 0) {
+            sec = new_sec(pconf, sec_name);
+            if (sec == NULL) {
+                ST_WARNING("Failed to new_sec.");
+                return -1;
+            }
+        } else {
+            sec = pconf->secs + sec_i;
+        }
+
+        strncpy(sec->def_param[sec->def_param_num].key, key,
+                MAX_STCONF_LEN);
+        sec->def_param[sec->def_param_num].key[MAX_STCONF_LEN - 1] = 0;
+        if (default_value) {
+            snprintf(sec->def_param[sec->def_param_num].value,
+                    MAX_STCONF_LEN, "%s", "True");
+        } else {
+            snprintf(sec->def_param[sec->def_param_num].value,
+                    MAX_STCONF_LEN, "%s", "False");
+        }
+        sec->def_param[sec->def_param_num].value[MAX_STCONF_LEN - 1] = 0;
+        sec->def_param_num++;
+
+        if (resize_sec(sec) < 0) {
+            ST_WARNING("Failed to resize_sec.");
+            return -1;
+        }
+    }
     return 0;
 }
 

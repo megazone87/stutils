@@ -31,3 +31,8 @@ For Mac OSX, the last line should be
 ```
 $ export DYLD_LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$DYLD_LIBRARY_PATH
 ```
+
+## License
+
+**stutils** is open source software licensed under the MIT License. See the `LICENSE` file for more information.
+
