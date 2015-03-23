@@ -104,152 +104,152 @@ void show_stconf(stconf_t *pconf, const char *header);
 
 #define GET_BOOL_CONF(pconf, key, var) \
         do{\
-        if(getboolconf(pconf, NULL, #key, &var, NULL) < 0)\
+        if(getboolconf(pconf, NULL, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[__def_sec__].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[__def_sec__].", key);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_BOOL_CONF_DEF(pconf, key, var, def) \
         do{\
-            getboolconfdef(pconf, NULL, #key, &var, def);\
+            getboolconfdef(pconf, NULL, key, &var, def);\
         } while(0)
 
 #define GET_BOOL_SEC_CONF(pconf, sec, key, var) \
         do{\
-        if(getboolconf(pconf, #sec, #key, &var, NULL) < 0)\
+        if(getboolconf(pconf, sec, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[" #sec "].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_BOOL_SEC_CONF_DEF(pconf, sec, key, var, def) \
         do{\
-            getboolconfdef(pconf, #sec, #key, &var, def);\
+            getboolconfdef(pconf, sec, key, &var, def);\
         } while(0)
 
 #define GET_INT_CONF(pconf, key, var) \
         do{\
-        if(getintconf(pconf, NULL, #key, &var, NULL) < 0)\
+        if(getintconf(pconf, NULL, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[__def_sec__].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[__def_sec__].", key);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_INT_CONF_DEF(pconf, key, var, def) \
         do{\
-            getintconfdef(pconf, NULL, #key, &var, def);\
+            getintconfdef(pconf, NULL, key, &var, def);\
         } while(0)
 
 #define GET_INT_SEC_CONF(pconf, sec, key, var) \
         do{\
-        if(getintconf(pconf, #sec, #key, &var, NULL) < 0)\
+        if(getintconf(pconf, sec, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[" #sec "].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_INT_SEC_CONF_DEF(pconf, sec, key, var, def) \
         do{\
-            getintconfdef(pconf, #sec, #key, &var, def);\
+            getintconfdef(pconf, sec, key, &var, def);\
         } while(0)
 
 #define GET_UINT_CONF(pconf, key, var) \
         do{\
-        if(getuintconf(pconf, NULL, #key, &var, NULL) < 0)\
+        if(getuintconf(pconf, NULL, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[__def_sec__].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[__def_sec__].", key);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_UINT_CONF_DEF(pconf, key, var, def) \
         do{\
-            getuintconfdef(pconf, NULL, #key, &var, def);\
+            getuintconfdef(pconf, NULL, key, &var, def);\
         } while(0)
 
 #define GET_UINT_SEC_CONF(pconf, sec, key, var) \
         do{\
-        if(getuintconf(pconf, #sec, #key, &var, NULL) < 0)\
+        if(getuintconf(pconf, sec, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[" #sec "].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_UINT_SEC_CONF_DEF(pconf, sec, key, var, def) \
         do{\
-            getuintconfdef(pconf, #sec, #key, &var, def);\
+            getuintconfdef(pconf, sec, key, &var, def);\
         } while(0)
 
 #define GET_STR_CONF(pconf, key, var, len) \
         do{\
-            if(getstrconf(pconf, NULL, #key, var, len, NULL) < 0)\
+            if(getstrconf(pconf, NULL, key, var, len, NULL) < 0)\
             {\
-                ST_WARNING("Failed to load key[" #key "] "\
-                        "in section[__def_sec__].");\
+                ST_WARNING("Failed to load key[%s] "\
+                        "in section[__def_sec__].", key);\
                 goto STCONF_ERR; \
             }\
         } while(0)
 
 #define GET_STR_CONF_DEF(pconf, key, var, len, def) \
         do{\
-            getstrconfdef(pconf, NULL, #key, var, len, def);\
+            getstrconfdef(pconf, NULL, key, var, len, def);\
         } while(0)
 
 #define GET_STR_SEC_CONF(pconf, sec, key, var, len) \
         do{\
-            if(getstrconf(pconf, #sec, #key, var, len, NULL) < 0)\
+            if(getstrconf(pconf, sec, key, var, len, NULL) < 0)\
             {\
-                ST_WARNING("Failed to load key[" #key "] "\
-                        "in section[" #sec "].");\
+                ST_WARNING("Failed to load key[%s] "\
+                        "in section[%s].", key, sec);\
                 goto STCONF_ERR; \
             }\
         } while(0)
 
 #define GET_STR_SEC_CONF_DEF(pconf, sec, key, var, len, def) \
         do{\
-            getstrconfdef(pconf, #sec, #key, var, len, def);\
+            getstrconfdef(pconf, sec, key, var, len, def);\
         } while(0)
 
 #define GET_FLOAT_CONF(pconf, key, var) \
         do{\
-        if(getfloatconf(pconf, NULL, #key, &var, NULL) < 0)\
+        if(getfloatconf(pconf, NULL, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[__def_sec__].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[__def_sec__].", key);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_FLOAT_CONF_DEF(pconf, key, var, def) \
         do{\
-            getfloatconfdef(pconf, NULL, #key, &var, def);\
+            getfloatconfdef(pconf, NULL, key, &var, def);\
         } while(0)
 
 #define GET_FLOAT_SEC_CONF(pconf, sec, key, var) \
         do{\
-        if(getfloatconf(pconf, #sec, #key, &var, NULL) < 0)\
+        if(getfloatconf(pconf, sec, key, &var, NULL) < 0)\
         {\
-            ST_WARNING("Failed to load key[" #key "] "\
-                    "in section[" #sec "].");\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
             goto STCONF_ERR; \
         }\
         } while(0)
 
 #define GET_FLOAT_SEC_CONF_DEF(pconf, sec, key, var, def) \
         do{\
-            getfloatconfdef(pconf, #sec, #key, &var, def);\
+            getfloatconfdef(pconf, sec, key, &var, def);\
         } while(0)
 
 #ifdef __cplusplus

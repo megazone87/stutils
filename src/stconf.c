@@ -294,7 +294,7 @@ int getstrconf(stconf_t * pconf, const char *sec_name,
         return -1;
     }
 
-    if (sec_name == NULL) {
+    if (sec_name == NULL || sec_name[0] == '\0') {
         s = 0;
         for (p = 0; p < pconf->secs[s].param_num; p++) {
             if (strcasecmp(pconf->secs[s].param[p].key, key) == 0) {
@@ -401,12 +401,12 @@ int getboolconf(stconf_t * pconf, const char *sec_name,
     }
 
     if (strncmp(v, "1", 2) == 0
-            && strncasecmp(v, "T", 2) == 0
-            && strncasecmp(v, "TRUE", 5) == 0) {
+            || strncasecmp(v, "T", 2) == 0
+            || strncasecmp(v, "TRUE", 5) == 0) {
         (*value) = true;
     } else if (strncmp(v, "0", 2) == 0
-            && strncasecmp(v, "F", 2) == 0
-            && strncasecmp(v, "FALSE", 6) == 0) {
+            || strncasecmp(v, "F", 2) == 0
+            || strncasecmp(v, "FALSE", 6) == 0) {
         (*value) = false;
     } else {
         ST_WARNING("Unkown bool value[%s], should be \"True\" or \"False\".",
