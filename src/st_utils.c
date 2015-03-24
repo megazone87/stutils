@@ -337,3 +337,33 @@ uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed )
   return h;
 } 
 
+void st_shuffle(int *a, size_t n)
+{
+    size_t i = n;
+    size_t j;
+    int t;
+
+    while (i > 1) {
+        j = (size_t)((double)i * ( rand() / (RAND_MAX + 1.0) ));
+
+        t = a[j];
+        a[j] = a[i];
+        a[i] = t;
+    }
+}
+
+void st_shuffle_rand(int *a, size_t n, st_rand_t *rand)
+{
+    size_t i = n;
+    size_t j;
+    int t;
+
+    while (i > 1) {
+        j = (size_t)((double)i * ( st_rand(*rand) / (RAND_MAX + 1.0) ));
+
+        t = a[j];
+        a[j] = a[i];
+        a[i] = t;
+    }
+}
+
