@@ -12,10 +12,10 @@ OUTINCDIR = ../include/stutils
 SO_OBJ = ./so_obj
 
 TARGET_INC = st_dict.h st_alphabet.h st_utils.h stconf.h stlog.h \
-             st_macro.h st_queue.h st_stack.h st_heap.h st_net.h
+             st_macro.h st_queue.h st_stack.h st_heap.h st_net.h st_io.h
 
 OBJ_SO = st_dict.o st_alphabet.o st_utils.o stconf.o stlog.o \
-         st_queue.o st_stack.o st_heap.o st_net.o
+         st_queue.o st_stack.o st_heap.o st_net.o st_io.o
 
 TARGET_SO = libstutils.so
 
