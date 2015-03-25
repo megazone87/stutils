@@ -29,7 +29,9 @@
 #include <time.h>
 #include <pthread.h>
 #include <sys/stat.h>
-#include "stlog.h"
+
+#include "st_io.h"
+#include "st_log.h"
 
 static FILE *g_normal_fp = NULL;
 static FILE *g_wf_fp = NULL;
@@ -52,7 +54,7 @@ static char *st_time(char *t_ime)
     return  t_ime;
 }
 
-static int st_writelog_ex(FILE *fp, const char *fmt, va_list args)
+static int st_log_write_ex(FILE *fp, const char *fmt, va_list args)
 {
     char now[20];
 
@@ -73,7 +75,7 @@ static FILE *st_open_file(const char *name, const char *mode)
     char *path_end;
     char path[MAX_FILENAME_LEN];
 
-    fp = fopen(name, mode);
+    fp = st_fopen(name, mode);
     if (fp != NULL)
         return fp;
 
@@ -91,15 +93,16 @@ static FILE *st_open_file(const char *name, const char *mode)
 
     mkdir(path, 0700);
 
-    return fopen(name, mode);
+    return st_fopen(name, mode);
 }
 
-int st_openlog(const char *log_file, int mask)
+int st_log_open(const char *log_file, int mask)
 {
     char wf_file[2048];
     char now[20];
 
-    if (log_file == NULL || log_file[0] == '\0') {
+    if (log_file == NULL || log_file[0] == '\0'
+            || (log_file[0] == '-' && log_file[1] == '\0')) {
         g_normal_fp = stdout;
         g_wf_fp = stderr;
     } else {
@@ -129,14 +132,14 @@ int st_openlog(const char *log_file, int mask)
     return 0;
 }
 
-int st_openlog_mt(const char *log_file, int mask)
+int st_log_open_mt(const char *log_file, int mask)
 {
     g_mt = 1;
 
-    return st_openlog(log_file, mask);
+    return st_log_open(log_file, mask);
 }
 
-int st_writelog(int lev, const char* fmt, ...) 
+int st_log_write(int lev, const char* fmt, ...) 
 {
     va_list args;
     FILE *fp;
@@ -218,7 +221,7 @@ int st_writelog(int lev, const char* fmt, ...)
         fprintf(fp, " -- ");
     }
 
-    ret = st_writelog_ex(fp, fmt, args);
+    ret = st_log_write_ex(fp, fmt, args);
     va_end(args);
 
     fflush(fp);
@@ -230,7 +233,7 @@ int st_writelog(int lev, const char* fmt, ...)
     return ret;
 }
 
-int st_closelog(int iserr) 
+int st_log_close(int iserr) 
 {
     char now[20];
 

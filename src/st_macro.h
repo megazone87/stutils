@@ -31,7 +31,8 @@ extern "C" {
 
 #include <stdlib.h>
 #include <sys/time.h>
-#include "stlog.h"
+
+#include "st_log.h"
 
 #define MAX_LINE_LEN        4096
 #define MAX_DIR_LEN         256

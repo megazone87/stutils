@@ -93,15 +93,15 @@ void remove_leading_space(char *line)
     }
 }
  
-int split_line(char *line, char fields[][MAX_LINE_LEN], int max_field,
-    char *sep)
+int split_line(const char *line, char fields[][MAX_LINE_LEN], 
+        int max_field, const char *sep)
 {
     char *pstr;
     int i = 0;
 
     ST_CHECK_PARAM(fields == NULL || line == NULL, -1);
 
-    pstr = strtok(line, sep);
+    pstr = strtok((char *)line, sep);
     if(NULL == pstr)
     {
         strncpy(fields[0], line, MAX_LINE_LEN);

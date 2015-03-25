@@ -41,7 +41,7 @@ extern "C" {
 
 /*@ignore@*/ 
 #define ST_LOG(lev, fmt, ...) \
-    st_writelog(lev, "[%s:%d<<%s>>] " fmt, __FILE__, __LINE__, __func__, \
+    st_log_write(lev, "[%s:%d<<%s>>] " fmt, __FILE__, __LINE__, __func__, \
     ##__VA_ARGS__);
 
 #define ST_FATAL(fmt, ...) \
@@ -60,21 +60,21 @@ extern "C" {
     ST_LOG(ST_LOG_LEV_DEBUG, fmt, ##__VA_ARGS__);
 
 #define ST_CLEANEST(fmt, ...) \
-    st_writelog(ST_LOG_LEV_CLEANEST, fmt, ##__VA_ARGS__);
+    st_log_write(ST_LOG_LEV_CLEANEST, fmt, ##__VA_ARGS__);
 
 #define ST_CLEANER(fmt, ...) \
-    st_writelog(ST_LOG_LEV_CLEANER, fmt, ##__VA_ARGS__);
+    st_log_write(ST_LOG_LEV_CLEANER, fmt, ##__VA_ARGS__);
 
 #define ST_CLEAN(fmt, ...) \
-    st_writelog(ST_LOG_LEV_CLEAN, fmt, ##__VA_ARGS__);
+    st_log_write(ST_LOG_LEV_CLEAN, fmt, ##__VA_ARGS__);
 
-int st_openlog(const char *log_file, int mask);
+int st_log_open(const char *log_file, int mask);
 
-int st_openlog_mt(const char *log_file, int mask);
+int st_log_open_mt(const char *log_file, int mask);
 
-int st_writelog(const int lev, const char* fmt, ... );
+int st_log_write(const int lev, const char* fmt, ... );
 
-int st_closelog(int err);
+int st_log_close(int err);
 
 /*@end@*/ 
 
