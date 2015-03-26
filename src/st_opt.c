@@ -68,12 +68,6 @@ st_opt_t* st_opt_create()
     }
     memset(opt, 0, sizeof(st_opt_t));
 
-    opt->file_conf = st_conf_create();
-    if (opt->file_conf == NULL) {
-        ST_WARNING("Failed to st_opt_create file_conf.");
-        goto ERR;
-    }
-
     opt->cmd_conf = st_conf_create();
     if (opt->cmd_conf == NULL) {
         ST_WARNING("Failed to st_opt_create cmd_conf.");
@@ -115,12 +109,14 @@ void st_opt_show(st_opt_t *popt, const char *header)
         return;
     }
 
-    if (header == NULL) {
-        snprintf(name, MAX_LINE_LEN, "-- File");
-    } else {
-        snprintf(name, MAX_LINE_LEN, "%s -- File", header);
+    if (popt->file_conf != NULL) {
+        if (header == NULL) {
+            snprintf(name, MAX_LINE_LEN, "-- File");
+        } else {
+            snprintf(name, MAX_LINE_LEN, "%s -- File", header);
+        }
+        st_conf_show(popt->file_conf, name);
     }
-    st_conf_show(popt->file_conf, name);
 
     if (header == NULL) {
         snprintf(name, MAX_LINE_LEN, "-- Command Line");
@@ -181,7 +177,7 @@ static void st_info_type_print_val(st_opt_info_t *info, FILE *fp)
             fprintf(fp, "%u", info->uval);
             break;
         case SOT_FLOAT:
-            fprintf(fp, "%f", info->fval);
+            fprintf(fp, "%g", info->fval);
             break;
         case SOT_STR:
             fprintf(fp, "\"%s\"", info->sval);
@@ -403,6 +399,13 @@ int st_opt_parse(st_opt_t *opt, int *argc, const char *argv[])
         if (st_opt_get_str(opt, NULL, "config",
                     file, MAX_DIR_LEN, "", "config file") >= 0
                 && file[0] != '\0') {
+
+            opt->file_conf = st_conf_create();
+            if (opt->file_conf == NULL) {
+                ST_WARNING("Failed to st_opt_create file_conf.");
+                return -1;
+            }
+
             if (st_conf_load(opt->file_conf, file) < 0) {
                 ST_WARNING("Failed to st_conf_load from [%s].", file);
                 return -1;
@@ -419,20 +422,27 @@ int st_opt_get_str(st_opt_t *popt, const char *sec_name,
 {
     int ret;
 
-    ret = st_conf_get_str_def(popt->file_conf, sec_name, key, 
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_str_def(popt->file_conf, sec_name, key, 
                 value, vlen, default_value);
 
-    if (st_conf_get_str_def(popt->cmd_conf, sec_name, key,
-                value, vlen, default_value) < 0) {
-        if (ret < 0) {
+        if (st_conf_get_str(popt->cmd_conf, sec_name, key,
+                    value, vlen, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_str_def(popt->cmd_conf, sec_name, key,
+                    value, vlen, default_value) < 0) {
             return -1;
         }
     }
 
-    st_opt_add_info(popt, SOT_STR, sec_name, key, (void *)default_value,
-            desc);
+    ret = st_opt_add_info(popt, SOT_STR, sec_name, key,
+            (void *)default_value, desc);
 
-    return 0;
+    return ret;
 }
 
 int st_opt_get_bool(st_opt_t *popt, const char *sec_name, const char *key,
@@ -440,20 +450,27 @@ int st_opt_get_bool(st_opt_t *popt, const char *sec_name, const char *key,
 {
     int ret;
 
-    ret = st_conf_get_bool_def(popt->file_conf, sec_name, key, 
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_bool_def(popt->file_conf, sec_name, key, 
                 value, default_value);
 
-    if (st_conf_get_bool_def(popt->cmd_conf, sec_name, key,
-                value, default_value) < 0) {
-        if (ret < 0) {
+        if (st_conf_get_bool(popt->cmd_conf, sec_name, key,
+                    value, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_bool_def(popt->cmd_conf, sec_name, key,
+                    value, default_value) < 0) {
             return -1;
         }
     }
 
-    st_opt_add_info(popt, SOT_BOOL, sec_name, key, (void *)&default_value,
-            desc);
+    ret = st_opt_add_info(popt, SOT_BOOL, sec_name, key,
+            (void *)&default_value, desc);
 
-    return 0;
+    return ret;
 }
 
 int st_opt_get_int(st_opt_t *popt, const char *sec_name,
@@ -461,20 +478,27 @@ int st_opt_get_int(st_opt_t *popt, const char *sec_name,
 {
     int ret;
 
-    ret = st_conf_get_int_def(popt->file_conf, sec_name, key, 
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_int_def(popt->file_conf, sec_name, key, 
                 value, default_value);
 
-    if (st_conf_get_int_def(popt->cmd_conf, sec_name, key,
-                value, default_value) < 0) {
-        if (ret < 0) {
+        if (st_conf_get_int(popt->cmd_conf, sec_name, key,
+                    value, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_int_def(popt->cmd_conf, sec_name, key,
+                    value, default_value) < 0) {
             return -1;
         }
     }
 
-    st_opt_add_info(popt, SOT_INT, sec_name, key, (void *)&default_value,
-            desc);
+    ret = st_opt_add_info(popt, SOT_INT, sec_name, key,
+            (void *)&default_value, desc);
 
-    return 0;
+    return ret;
 }
 
 int st_opt_get_uint(st_opt_t *popt, const char *sec_name,
@@ -483,20 +507,27 @@ int st_opt_get_uint(st_opt_t *popt, const char *sec_name,
 {
     int ret;
 
-    ret = st_conf_get_uint_def(popt->file_conf, sec_name, key, 
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_uint_def(popt->file_conf, sec_name, key, 
                 value, default_value);
 
-    if (st_conf_get_uint_def(popt->cmd_conf, sec_name, key,
-                value, default_value) < 0) {
-        if (ret < 0) {
+        if (st_conf_get_uint(popt->cmd_conf, sec_name, key,
+                    value, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_uint_def(popt->cmd_conf, sec_name, key,
+                    value, default_value) < 0) {
             return -1;
         }
     }
 
-    st_opt_add_info(popt, SOT_UINT, sec_name, key, (void *)&default_value,
-            desc);
+    ret = st_opt_add_info(popt, SOT_UINT, sec_name, key,
+            (void *)&default_value, desc);
 
-    return 0;
+    return ret;
 }
 
 int st_opt_get_float(st_opt_t *popt, const char *sec_name,
@@ -505,19 +536,26 @@ int st_opt_get_float(st_opt_t *popt, const char *sec_name,
 {
     int ret;
 
-    ret = st_conf_get_float_def(popt->file_conf, sec_name, key, 
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_float_def(popt->file_conf, sec_name, key, 
                 value, default_value);
 
-    if (st_conf_get_float_def(popt->cmd_conf, sec_name, key,
-                value, default_value) < 0) {
-        if (ret < 0) {
+        if (st_conf_get_float(popt->cmd_conf, sec_name, key,
+                    value, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_float_def(popt->cmd_conf, sec_name, key,
+                    value, default_value) < 0) {
             return -1;
         }
     }
+    
+    ret = st_opt_add_info(popt, SOT_FLOAT, sec_name, key,
+            (void *)&default_value, desc);
 
-    st_opt_add_info(popt, SOT_FLOAT, sec_name, key, (void *)&default_value,
-            desc);
-
-    return 0;
+    return ret;
 }
 
