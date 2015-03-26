@@ -64,12 +64,7 @@ void remove_newline(char *line);
 uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
 
 void st_shuffle(int *a, size_t n);
-
-typedef unsigned long long st_rand_t;
-
-#define st_rand(r) ((r) = ((r) * (st_rand_t)25214903917 + 11) & 0xFFFF)
-#define ST_RAND_MAX 65536
-void st_shuffle_rand(int *a, size_t n, st_rand_t *rand);
+void st_shuffle_r(int *a, size_t n, unsigned *rand);
 
 #ifdef __cplusplus
 }
