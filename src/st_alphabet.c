@@ -280,6 +280,8 @@ int st_alphabet_save_bin(st_alphabet_t *alphabet, FILE *fp)
         return -1;
     }
 
+    fflush(fp);
+
     return 0;
 }
 
@@ -290,6 +292,7 @@ int st_alphabet_save_txt(st_alphabet_t *alphabet, FILE *fp)
 
     ST_CHECK_PARAM(alphabet == NULL || fp == NULL, -1);
 
+    fprintf(fp, SYM_NUM " = %d\n", alphabet->label_num);
     labels = alphabet->labels;
     for(i = 0; i < alphabet->label_num; i++)
     {
@@ -298,6 +301,8 @@ int st_alphabet_save_txt(st_alphabet_t *alphabet, FILE *fp)
             fprintf(fp, "%s\t%d\n", labels[i].label, labels[i].symid);
         }
     }
+
+    fflush(fp);
 
     return 0;
 }
@@ -365,6 +370,7 @@ int st_alphabet_load_txt(st_alphabet_t *alphabet, FILE *fp)
         goto ERR;
     }
 
+    i = 0;
     while(fgets(line, MAX_LINE_LEN, fp))
     {
         if(sscanf(line, "%s %d", syms, &id) != 2)
@@ -397,6 +403,11 @@ int st_alphabet_load_txt(st_alphabet_t *alphabet, FILE *fp)
         {
             is_aux[id] = true;
             aux_num++;
+        }
+
+        i++;
+        if (i >= label_num) {
+            break;
         }
     }
 

@@ -385,6 +385,8 @@ int st_dict_save(st_dict_t *wd, FILE *fp)
         return -1;
     }
     
+    fflush(fp);
+
     return 0;
 }
 
@@ -721,8 +723,8 @@ st_dict_t* st_dict_dup(st_dict_t *d)
         goto ERR;
     }
 
-    memcpy(dict->first_level_node, d->first_level_node,
-            sizeof(st_dict_node_t)*dict->hash_num);
+    memcpy(dict->node_pool, d->node_pool,
+            sizeof(st_dict_node_t)*dict->max_pool_num);
 
     if(d->clear_nodes != NULL) {
         dict->clear_nodes = (st_dict_id_t *)

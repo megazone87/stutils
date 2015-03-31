@@ -44,6 +44,9 @@ extern "C" {
 #define false 0
 #endif
 
+#define bool2str(b) ((b)?"true":"false")
+#define str2bool(s) ((strncasecmp(s, "true", 4) == 0)? true : false)
+
 #ifndef uint
 typedef unsigned int uint;
 #endif
