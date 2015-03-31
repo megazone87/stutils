@@ -681,3 +681,64 @@ int st_dict_update(st_dict_t *wd, st_dict_node_t *pnode, void *node_eq_arg,
     return 0;
 }
 
+st_dict_t* st_dict_dup(st_dict_t *d)
+{
+    st_dict_t *dict = NULL;
+
+    ST_CHECK_PARAM(d == NULL, NULL);
+
+    dict = (st_dict_t *)malloc(sizeof(st_dict_t));
+    if(dict == NULL) {
+        ST_WARNING("Failed to alloc mem for st_dict.");
+        return NULL;
+    }
+    memset(dict, 0, sizeof(st_dict_t));
+
+    dict->hash_num = d->hash_num;
+    dict->realloc_node_num = d->realloc_node_num;
+    dict->addr_mask = d->addr_mask;
+    dict->cur_index = d->cur_index;
+    dict->max_pool_num = d->max_pool_num;
+    dict->node_num = d->node_num;
+    dict->clear_node_num = d->clear_node_num;
+
+    dict->hash_func = d->hash_func;
+    dict->node_eq_func = d->node_eq_func;
+
+    dict->first_level_node = (st_dict_node_t *)
+        malloc(sizeof(st_dict_node_t) * dict->hash_num);
+    if(dict->first_level_node == NULL) {
+        ST_WARNING("Failed to alloc mem for first_level_node.");
+        goto ERR;
+    }
+    memcpy(dict->first_level_node, d->first_level_node,
+            sizeof(st_dict_node_t)*dict->hash_num);
+
+    dict->node_pool = (st_dict_node_t *)
+        malloc(sizeof(st_dict_node_t)*dict->max_pool_num);
+    if(dict->node_pool == NULL) {
+        ST_WARNING("Failed to alloc mem for node_pool.");
+        goto ERR;
+    }
+
+    memcpy(dict->first_level_node, d->first_level_node,
+            sizeof(st_dict_node_t)*dict->hash_num);
+
+    if(d->clear_nodes != NULL) {
+        dict->clear_nodes = (st_dict_id_t *)
+            malloc(sizeof(st_dict_id_t)*dict->hash_num);
+        if(dict->clear_nodes == NULL) {
+            ST_WARNING("Failed to alloc mem for clear_nodes.");
+            goto ERR;
+        }
+        memcpy(dict->clear_nodes, d->clear_nodes,
+                sizeof(st_dict_id_t)*dict->hash_num);
+    }
+
+    return dict;
+
+ERR:
+    safe_st_dict_destroy(dict);
+    return NULL;
+}
+

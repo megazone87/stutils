@@ -76,6 +76,7 @@ void st_alphabet_destroy(st_alphabet_t *alphabet);
 st_alphabet_t* st_alphabet_create(int max_label_num);
 int st_alphabet_add_label(st_alphabet_t *alphabet, const char *label_);
 
+st_alphabet_t* st_alphabet_dup(st_alphabet_t *a);
 
 #ifdef __cplusplus
 }

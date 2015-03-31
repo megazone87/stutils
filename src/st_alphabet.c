@@ -532,3 +532,49 @@ ERR:
     return NULL;
 }
 
+st_alphabet_t* st_alphabet_dup(st_alphabet_t *a)
+{
+    st_alphabet_t *alphabet = NULL;
+
+    ST_CHECK_PARAM(a == NULL, NULL);
+
+    alphabet = st_alphabet_alloc();
+    if(alphabet == NULL) {
+        ST_WARNING("Failed to alphabet_alloc.");
+        goto ERR;
+    }
+
+    alphabet->max_label_num = a->max_label_num;
+    alphabet->label_num = a->label_num;
+    alphabet->aux_num = a->aux_num;
+
+    alphabet->labels = (st_label_t *)
+        malloc(a->max_label_num * sizeof(st_label_t));
+    if(alphabet->labels == NULL) {
+        ST_WARNING("Failed to allocate memory for labels.");
+        goto ERR;
+    }
+    
+    memcpy(alphabet->labels, a->labels,
+            sizeof(st_label_t)*a->max_label_num);
+    
+    alphabet->index_dict = st_dict_dup(a->index_dict);
+    if (alphabet->index_dict == NULL) {
+        ST_WARNING("Failed to st_dict_dup.");
+        goto ERR;
+    }
+
+    alphabet->is_aux = (bool *) malloc(a->max_label_num * sizeof(bool));
+    if(alphabet->is_aux == NULL) {
+        ST_WARNING("Failed to allocate memory for is_aux.");
+        goto ERR;
+    }
+    memcpy(alphabet->is_aux, a->is_aux, a->max_label_num*sizeof(bool));
+    
+    return alphabet;
+
+ERR:
+    safe_st_alphabet_destroy(alphabet);
+    return NULL;
+}
+

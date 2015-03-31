@@ -112,6 +112,8 @@ st_dict_id_t st_dict_hash_simple(st_dict_t *wd, st_dict_node_t *pnode);
 st_dict_id_t st_dict_hash_sign1l16(st_dict_t *wd, st_dict_node_t *pnode);
 st_dict_id_t st_dict_hash_sign1(st_dict_t *wd, st_dict_node_t *pnode);
 
+st_dict_t* st_dict_dup(st_dict_t *d);
+
 #ifdef __cplusplus
 }
 #endif

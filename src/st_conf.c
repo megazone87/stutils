@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "st_log.h"
 #include "st_conf.h"
@@ -703,6 +704,23 @@ void st_conf_destroy(st_conf_t * pconf)
     }
 }
 
+static char* st_conf_normalize_key(char *key)
+{
+    char *p;
+
+    p = key;
+    while (*p) {
+        if (*p == '-') {
+            *p = '_';
+        } else {
+            *p = toupper(*p);
+        }
+        p++;
+    }
+
+    return key;
+}
+
 void st_conf_show(st_conf_t *pconf, const char *header)
 {
     int s;
@@ -721,11 +739,12 @@ void st_conf_show(st_conf_t *pconf, const char *header)
         ST_CLEAN("[%s]", pconf->secs[s].name);
         for (p = 0; p < pconf->secs[s].param_num; p++) {
             ST_CLEAN("%s{%s : %s}", pconf->secs[s].param[p].used ? "" : "*",
-                    pconf->secs[s].param[p].key, 
+                    st_conf_normalize_key(pconf->secs[s].param[p].key), 
                     pconf->secs[s].param[p].value);
         }
         for (p = 0; p < pconf->secs[s].def_param_num; p++) {
-            ST_CLEAN("{%s : %s}#", pconf->secs[s].def_param[p].key,
+            ST_CLEAN("{%s : %s}#", 
+                    st_conf_normalize_key(pconf->secs[s].def_param[p].key),
                     pconf->secs[s].def_param[p].value);
         }
     }

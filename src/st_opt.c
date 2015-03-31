@@ -241,7 +241,7 @@ static int st_opt_add_info(st_opt_t *opt, st_opt_type_t type,
     return 0;
 }
 
-static void st_opt_normalize_key(char *key, bool forprint)
+static char* st_opt_normalize_key(char *key, bool forprint)
 {
     char *p;
 
@@ -263,6 +263,8 @@ static void st_opt_normalize_key(char *key, bool forprint)
             p++;
         }
     }
+
+    return key;
 }
 
 void st_opt_show_usage(st_opt_t *opt, FILE *fp)
