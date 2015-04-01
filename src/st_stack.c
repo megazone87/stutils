@@ -23,6 +23,8 @@
  */
 
 #include <string.h>
+
+#include "st_log.h"
 #include "st_stack.h"
 
 void st_stack_destroy(st_stack_t *stack)

@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 
 #include "st_macro.h"
+#include "st_log.h"
 #include "st_io.h"
 
 FILE* st_fopen(const char *name, const char *mode)

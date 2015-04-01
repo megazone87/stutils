@@ -29,6 +29,8 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+
 #include "st_macro.h"
 #include "st_conf.h"
 

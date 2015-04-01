@@ -29,6 +29,9 @@
 extern "C" {
 #endif
 
+#include "st_macro.h"
+#include "st_opt.h"
+
 #define ST_LOG_LEV_CLEANEST     0x01
 #define ST_LOG_LEV_CLEANER      0x02
 #define ST_LOG_LEV_CLEAN        0x03
@@ -38,6 +41,24 @@ extern "C" {
 #define ST_LOG_LEV_TRACE	    0x07
 #define ST_LOG_LEV_DEBUG	    0x08
 
+typedef struct _st_log_opt_t_ {
+    char file[MAX_DIR_LEN];
+    int  level;
+} st_log_opt_t;
+ 
+#define DEFAULT_LOGFILE         "/dev/stderr"
+#define DEFAULT_LOGLEVEL        8
+
+int st_log_load_opt(st_log_opt_t *log_opt, st_opt_t *st_opt,
+        const char *sec_name);
+
+int st_log_open(st_log_opt_t *log_opt);
+
+int st_log_open_mt(st_log_opt_t *log_opt);
+
+int st_log_write(const int lev, const char* fmt, ... );
+
+int st_log_close(int err);
 
 /*@ignore@*/ 
 #define ST_LOG(lev, fmt, ...) \
@@ -67,14 +88,6 @@ extern "C" {
 
 #define ST_CLEAN(fmt, ...) \
     st_log_write(ST_LOG_LEV_CLEAN, fmt, ##__VA_ARGS__);
-
-int st_log_open(const char *log_file, int mask);
-
-int st_log_open_mt(const char *log_file, int mask);
-
-int st_log_write(const int lev, const char* fmt, ... );
-
-int st_log_close(int err);
 
 /*@end@*/ 
 

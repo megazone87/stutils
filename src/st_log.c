@@ -96,23 +96,43 @@ static FILE *st_open_file(const char *name, const char *mode)
     return st_fopen(name, mode);
 }
 
-int st_log_open(const char *log_file, int mask)
+int st_log_load_opt(st_log_opt_t *log_opt, st_opt_t *st_opt,
+        const char *sec_name)
+{
+    ST_CHECK_PARAM(log_opt == NULL || st_opt == NULL, -1);
+
+    ST_OPT_GET_STR(st_opt, "LOG_FILE",
+            log_opt->file, MAX_DIR_LEN, DEFAULT_LOGFILE, "Log file");
+    ST_OPT_GET_INT(st_opt, "LOG_LEVEL", log_opt->level,
+                     DEFAULT_LOGLEVEL, "Log level (1-8)");
+
+    return 0;
+
+ST_OPT_ERR:
+    return -1;
+}
+
+int st_log_open(st_log_opt_t *log_opt)
 {
     char wf_file[2048];
     char now[20];
 
-    if (log_file == NULL || log_file[0] == '\0'
-            || (log_file[0] == '-' && log_file[1] == '\0')) {
+    if (log_opt == NULL || log_opt->file[0] == '\0'
+            || (log_opt->file[0] == '-' && log_opt->file[1] == '\0')) {
         g_normal_fp = stdout;
         g_wf_fp = stderr;
+    } else if (log_opt != NULL 
+            && strcmp(log_opt->file, "/dev/stderr") == 0) {
+        g_normal_fp = stderr;
+        g_wf_fp = stderr;
     } else {
-        g_normal_fp = st_open_file(log_file, "a");
+        g_normal_fp = st_open_file(log_opt->file, "a");
         if (g_normal_fp == NULL) {
-            fprintf(stderr, "Failed to open log file[%s]\n", log_file);
+            fprintf(stderr, "Failed to open log file[%s]\n", log_opt->file);
             g_normal_fp = stdout;
         }
 
-        snprintf(wf_file, 2048, "%s.wf", log_file);
+        snprintf(wf_file, 2048, "%s.wf", log_opt->file);
         g_wf_fp = st_open_file(wf_file, "a");
         if (g_wf_fp == NULL) {
             fprintf(stderr, "Failed to open wf log file[%s]\n", wf_file);
@@ -127,16 +147,16 @@ int st_log_open(const char *log_file, int mask)
     fflush(g_normal_fp);
     fflush(g_wf_fp);
 
-    g_mask = mask;
+    g_mask = (log_opt == NULL) ? DEFAULT_LOGLEVEL : log_opt->level;
 
     return 0;
 }
 
-int st_log_open_mt(const char *log_file, int mask)
+int st_log_open_mt(st_log_opt_t *log_opt)
 {
     g_mt = 1;
 
-    return st_log_open(log_file, mask);
+    return st_log_open(log_opt);
 }
 
 int st_log_write(int lev, const char* fmt, ...) 
@@ -254,12 +274,13 @@ int st_log_close(int iserr)
     fflush(g_normal_fp);
     fflush(g_wf_fp);
 
-    if (g_normal_fp != NULL && g_normal_fp != stdout) {
+    if (g_normal_fp != NULL && g_normal_fp != stdout
+            && g_normal_fp != stderr) {
         fclose(g_normal_fp);
         g_normal_fp = NULL;
     }
 
-    if (g_wf_fp != NULL && g_wf_fp != stderr) {
+    if (g_wf_fp != NULL && g_wf_fp != stdout && g_wf_fp != stderr) {
         fclose(g_wf_fp);
         g_wf_fp = NULL;
     }

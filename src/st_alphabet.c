@@ -25,6 +25,7 @@
 #include <string.h>
 #include "st_utils.h"
 #include "st_alphabet.h"
+#include "st_log.h"
 
 #define SYM_NUM "symbols"
 

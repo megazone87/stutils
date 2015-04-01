@@ -23,6 +23,7 @@
  */
 
 #include "st_macro.h"
+#include "st_log.h"
 #include "st_utils.h"
 #include "st_heap.h"
 

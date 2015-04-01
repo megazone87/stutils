@@ -23,6 +23,7 @@
  */
 
 #include "st_utils.h"
+#include "st_log.h"
 #include "st_queue.h"
 
 st_queue_t* st_queue_create(st_queue_id_t capacity)
