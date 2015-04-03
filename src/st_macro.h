@@ -43,46 +43,46 @@ extern "C" {
 #endif
 
 #define bool2str(b) ((b)?"true":"false")
-#define str2bool(s) ((strncasecmp(s, "true", 4) == 0)? true : false)
+#define str2bool(s) ((strncasecmp((s), "true", 4) == 0)? true : false)
 
 #ifndef uint
 typedef unsigned int uint;
 #endif
 
-#define TIMEDIFF(s, e) ((e.tv_sec - s.tv_sec)*1000 \
-        + (e.tv_usec - s.tv_usec)/1000)
+#define TIMEDIFF(s, e) (((e).tv_sec - (s).tv_sec)*1000 \
+        + ((e).tv_usec - (s).tv_usec)/1000)
 
-#define UTIMEDIFF(s, e) ((e.tv_sec - s.tv_sec)*1000*1000 \
-        + (e.tv_usec - s.tv_usec))
+#define UTIMEDIFF(s, e) (((e).tv_sec - (s).tv_sec)*1000*1000 \
+        + ((e).tv_usec - (s).tv_usec))
 
-#define min(X,Y) (((X)<(Y))?X:Y)
-#define max(X,Y) (((X)>(Y))?X:Y)
+#define min(X,Y) (((X)<(Y)) ? (X) : (Y))
+#define max(X,Y) (((X)>(Y)) ? (X) : (Y))
 
 #define safe_free(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 
 #define safe_delete(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         delete(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 
 #define safe_fclose(fp) do {\
-    if(fp != NULL) {\
+    if((fp) != NULL) {\
         fclose(fp);\
-        fp = NULL;\
+        (fp) = NULL;\
     }\
     } while(0)
 
 #define safe_close(fd) do {\
-    if(fd >= 0) {\
+    if((fd) >= 0) {\
         close(fd);\
-        fd = -1;\
+        (fd) = -1;\
     }\
     } while(0)
 

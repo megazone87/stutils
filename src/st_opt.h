@@ -70,10 +70,10 @@ st_opt_t *st_opt_create();
 int st_opt_parse(st_opt_t *opt, int *argc, const char *argv[]);
 
 #define safe_st_opt_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_opt_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 void st_opt_destroy(st_opt_t *popt);

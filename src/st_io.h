@@ -36,9 +36,9 @@ extern "C" {
 FILE* st_fopen(const char *name, const char *mode);
 
 #define safe_st_fclose(fp) do {\
-    if(fp != NULL) {\
+    if((fp) != NULL) {\
         st_fclose(fp);\
-        fp = NULL;\
+        (fp) = NULL;\
     }\
     } while(0)
 

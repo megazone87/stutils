@@ -86,10 +86,10 @@ st_dict_t* st_dict_create(st_dict_id_t hash_num,
     st_dict_node_eq_fun_t node_eq_func, bool need_clear);
 
 #define safe_st_dict_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_dict_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 void st_dict_destroy(st_dict_t *wd);

@@ -64,10 +64,10 @@ char *st_alphabet_get_label(st_alphabet_t *alphabet, int index);
 int st_alphabet_get_index(st_alphabet_t *alphabet, const char *label);
 
 #define safe_st_alphabet_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_alphabet_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 

@@ -48,10 +48,10 @@ typedef struct _st_stack_t_
 st_stack_t* st_stack_create(st_stack_id_t capacity);
 
 #define safe_st_stack_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_stack_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 void st_stack_destroy(st_stack_t *stack);

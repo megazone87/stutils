@@ -72,10 +72,10 @@ int st_heap_fixdown(st_heap_t *heap, st_heap_id_t index);
 int st_heap_fixup(st_heap_t *heap, st_heap_id_t index);
 
 #define safe_st_heap_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_heap_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 void st_heap_destroy(st_heap_t* heap);

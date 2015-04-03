@@ -73,10 +73,10 @@ st_conf_t* st_conf_create();
 int st_conf_load(st_conf_t *st_conf, const char *conf_file);
 
 #define safe_st_conf_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_conf_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 void st_conf_destroy(st_conf_t *pconf);

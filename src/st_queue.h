@@ -59,10 +59,10 @@ st_queue_id_t st_queue_size(st_queue_t* queue);
 int st_queue_clear(st_queue_t* queue);
 
 #define safe_st_queue_destroy(ptr) do {\
-    if(ptr != NULL) {\
+    if((ptr) != NULL) {\
         st_queue_destroy(ptr);\
         safe_free(ptr);\
-        ptr = NULL;\
+        (ptr) = NULL;\
     }\
     } while(0)
 void st_queue_destroy(st_queue_t* queue);
