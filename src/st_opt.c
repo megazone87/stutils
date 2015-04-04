@@ -347,7 +347,12 @@ int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
         return -1;
     }
     if (num_kv == 1) {
-        key_value[1][0] = '\0';
+        if (strcasecmp(key_value[0], "help") == 0) {
+            strcpy(key_value[1], "true");
+        } else {
+            ST_WARNING("Format: --key=value");
+            return -1;
+        }
     }
 
     num_sk = split_line(key_value[0], sec_key, 2, "^");
