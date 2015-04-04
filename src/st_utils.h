@@ -30,6 +30,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdio.h>
 
 #include "st_macro.h"
 
@@ -65,6 +66,8 @@ uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
 
 void st_shuffle(int *a, size_t n);
 void st_shuffle_r(int *a, size_t n, unsigned *rand);
+
+int st_readline(FILE *fp, const char *fmt, ...);
 
 #ifdef __cplusplus
 }

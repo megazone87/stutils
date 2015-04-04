@@ -23,6 +23,8 @@
  */
 
 #include <string.h>
+#include <stdarg.h>
+
 #include "st_macro.h"
 #include "st_log.h"
 #include "st_utils.h"
@@ -370,3 +372,20 @@ void st_shuffle_r(int *a, size_t n, unsigned *rand)
     }
 }
 
+int st_readline(FILE *fp, const char *fmt, ...) 
+{
+    char line[MAX_LINE_LEN];
+    va_list args;
+    int ret;
+
+    if (fgets(line, MAX_LINE_LEN, fp) == NULL) {
+        ST_WARNING("Failed to read line.");
+        return -1;
+    }
+
+    va_start (args, fmt);
+    ret = vsscanf(line, fmt, args);
+    va_end (args);
+
+    return ret;
+}
