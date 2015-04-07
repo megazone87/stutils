@@ -350,7 +350,7 @@ int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
         if (strcasecmp(key_value[0], "help") == 0) {
             strcpy(key_value[1], "true");
         } else {
-            ST_WARNING("Format: --key=value");
+            ST_WARNING("Error Format(--key=value): [%s]", argv[arg]);
             return -1;
         }
     }

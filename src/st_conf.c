@@ -630,9 +630,9 @@ int st_conf_get_float(st_conf_t *pconf, const char *sec_name,
 
     if (v[0] == '\0') {
         if (sec_name == NULL || sec_name[0] == '\0') {
-            ST_WARNING("Uint option[%s] should have arguement", key);
+            ST_WARNING("Float option[%s] should have arguement", key);
         } else {
-            ST_WARNING("Uint option[%s^%s] should have arguement",
+            ST_WARNING("Float option[%s^%s] should have arguement",
                     sec_name, key);
         }
 
@@ -665,7 +665,7 @@ int st_conf_get_float_def(st_conf_t *pconf, const char *sec_name,
                 MAX_ST_CONF_LEN);
         sec->def_param[sec->def_param_num].key[MAX_ST_CONF_LEN - 1] = 0;
         snprintf(sec->def_param[sec->def_param_num].value,
-                 MAX_ST_CONF_LEN, "%f", default_value);
+                 MAX_ST_CONF_LEN, "%g", default_value);
         sec->def_param[sec->def_param_num].value[MAX_ST_CONF_LEN - 1] = 0;
         sec->def_param_num++;
         if (resize_sec(sec) < 0) {
