@@ -618,6 +618,125 @@ int st_conf_get_uint_def(st_conf_t *pconf, const char *sec_name,
     return 0;
 }
 
+int st_conf_get_long(st_conf_t *pconf, const char *sec_name,
+        const char *key, long *value, int *sec_i)
+{
+    char v[MAX_ST_CONF_LINE_LEN];
+
+    if (st_conf_get_str(pconf, sec_name, key, v, 
+                MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
+        return -1;
+    }
+
+    if (v[0] == '\0') {
+        if (sec_name == NULL || sec_name[0] == '\0') {
+            ST_WARNING("Int option[%s] should have arguement", key);
+        } else {
+            ST_WARNING("Int option[%s^%s] should have arguement",
+                    sec_name, key);
+        }
+
+        return -1;
+    }
+
+    (*value) = atoi(v);
+    return 0;
+}
+
+int st_conf_get_long_def(st_conf_t *pconf, const char *sec_name,
+        const char *key, long *value, long default_value)
+{
+    st_conf_section_t *sec;
+    int sec_i = -1;
+
+    if (st_conf_get_long(pconf, sec_name, key, value, &sec_i) < 0) {
+        *value = default_value;
+
+        if (sec_i < 0) {
+            sec = st_conf_new_sec(pconf, sec_name);
+            if (sec == NULL) {
+                ST_WARNING("Failed to st_conf_new_sec.");
+                return -1;
+            }
+        } else {
+            sec = pconf->secs + sec_i;
+        }
+
+        strncpy(sec->def_param[sec->def_param_num].key, key,
+                MAX_ST_CONF_LEN);
+        sec->def_param[sec->def_param_num].key[MAX_ST_CONF_LEN - 1] = 0;
+        snprintf(sec->def_param[sec->def_param_num].value,
+                 MAX_ST_CONF_LEN, "%ld", default_value);
+        sec->def_param[sec->def_param_num].value[MAX_ST_CONF_LEN - 1] = 0;
+        sec->def_param_num++;
+
+        if (resize_sec(sec) < 0) {
+            ST_WARNING("Failed to resize_sec.");
+            return -1;
+        }
+    }
+    return 0;
+}
+
+int st_conf_get_ulong(st_conf_t *pconf, const char *sec_name,
+        const char *key, unsigned long *value, int *sec_i)
+{
+    char v[MAX_ST_CONF_LINE_LEN];
+
+    if (st_conf_get_str(pconf, sec_name, key, v, 
+                MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
+        return -1;
+    }
+
+    if (v[0] == '\0') {
+        if (sec_name == NULL || sec_name[0] == '\0') {
+            ST_WARNING("Ulong option[%s] should have arguement", key);
+        } else {
+            ST_WARNING("Ulong option[%s^%s] should have arguement",
+                    sec_name, key);
+        }
+
+        return -1;
+    }
+
+    sscanf(v, "%lu", value);
+    return 0;
+}
+
+int st_conf_get_ulong_def(st_conf_t *pconf, const char *sec_name,
+        const char *key, unsigned long *value, unsigned long default_value)
+{
+    st_conf_section_t *sec;
+    int sec_i = -1;
+
+    if (st_conf_get_ulong(pconf, sec_name, key, value, &sec_i) < 0) {
+        *value = default_value;
+
+        if (sec_i < 0) {
+            sec = st_conf_new_sec(pconf, sec_name);
+            if (sec == NULL) {
+                ST_WARNING("Failed to st_conf_new_sec.");
+                return -1;
+            }
+        } else {
+            sec = pconf->secs + sec_i;
+        }
+        strncpy(sec->def_param[sec->def_param_num].key, key,
+                MAX_ST_CONF_LEN);
+        sec->def_param[sec->def_param_num].key[MAX_ST_CONF_LEN - 1] = 0;
+        snprintf(sec->def_param[sec->def_param_num].value,
+                 MAX_ST_CONF_LEN, "%lu", default_value);
+        sec->def_param[sec->def_param_num].value[MAX_ST_CONF_LEN - 1] = 0;
+        sec->def_param_num++;
+
+        if (resize_sec(sec) < 0) {
+            ST_WARNING("Failed to resize_sec.");
+            return -1;
+        }
+    }
+    return 0;
+}
+
 int st_conf_get_float(st_conf_t *pconf, const char *sec_name,
         const char *key, float *value, int *sec_i)
 {

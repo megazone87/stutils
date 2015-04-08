@@ -102,6 +102,12 @@ int st_conf_get_int(st_conf_t * pconf, const char *sec_name,
 int st_conf_get_uint(st_conf_t *pconf, const char *sec_name,
         const char *key, unsigned int *value, int *sec_i);
 
+int st_conf_get_long(st_conf_t *pconf, const char *sec_name,
+        const char *key, long *value, int *sec_i);
+
+int st_conf_get_ulong(st_conf_t *pconf, const char *sec_name,
+        const char *key, unsigned long *value, int *sec_i);
+
 int st_conf_get_str(st_conf_t * pconf, const char *sec_name,
         const char *key, char *value, int vlen, int *sec_i);
 
@@ -116,6 +122,12 @@ int st_conf_get_int_def(st_conf_t *pconf, const char *sec_name,
 
 int st_conf_get_uint_def(st_conf_t *pconf, const char *sec_name,
         const char *key, unsigned int *value, unsigned int default_value);
+
+int st_conf_get_long_def(st_conf_t *pconf, const char *sec_name,
+        const char *key, long *value, long default_value);
+
+int st_conf_get_ulong_def(st_conf_t *pconf, const char *sec_name,
+        const char *key, unsigned long *value, unsigned long default_value);
 
 int st_conf_get_str_def(st_conf_t *pconf, const char *sec_name,
         const char *key, char *value, int vlen, const char *default_value);
@@ -225,6 +237,78 @@ int st_conf_get_bool_def(st_conf_t *pconf, const char *sec_name,
 #define ST_CONF_SEC_GET_UINT_DEF(pconf, sec, key, var, def) \
     do{\
         if (st_conf_get_uint_def(pconf, sec, key, &var, def) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_GET_LONG(pconf, key, var) \
+    do{\
+        if (st_conf_get_long(pconf, NULL, key, &var, NULL) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[" DEF_SEC_NAME "].", key);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_GET_LONG_DEF(pconf, key, var, def) \
+    do{\
+        if (st_conf_get_long_def(pconf, NULL, key, &var, def) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[" DEF_SEC_NAME "].", key);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_SEC_GET_LONG(pconf, sec, key, var) \
+    do{\
+        if (st_conf_get_long(pconf, sec, key, &var, NULL) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_SEC_GET_LONG_DEF(pconf, sec, key, var, def) \
+    do{\
+        if (st_conf_get_long_def(pconf, sec, key, &var, def) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_GET_ULONG(pconf, key, var) \
+    do{\
+        if (st_conf_get_ulong(pconf, NULL, key, &var, NULL) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[" DEF_SEC_NAME "].", key);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_GET_ULONG_DEF(pconf, key, var, def) \
+    do{\
+        if (st_conf_get_ulong_def(pconf, NULL, key, &var, def) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[" DEF_SEC_NAME "].", key);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_SEC_GET_ULONG(pconf, sec, key, var) \
+    do{\
+        if (st_conf_get_ulong(pconf, sec, key, &var, NULL) < 0) {\
+            ST_WARNING("Failed to load key[%s] "\
+                    "in section[%s].", key, sec);\
+            goto ST_CONF_ERR; \
+        }\
+    } while(0)
+
+#define ST_CONF_SEC_GET_ULONG_DEF(pconf, sec, key, var, def) \
+    do{\
+        if (st_conf_get_ulong_def(pconf, sec, key, &var, def) < 0) {\
             ST_WARNING("Failed to load key[%s] "\
                     "in section[%s].", key, sec);\
             goto ST_CONF_ERR; \

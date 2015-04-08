@@ -149,6 +149,12 @@ static char* st_opt_type_str(st_opt_type_t type)
         case SOT_UINT:
             return "uint";
             break;
+        case SOT_LONG:
+            return "long";
+            break;
+        case SOT_ULONG:
+            return "ulong";
+            break;
         case SOT_FLOAT:
             return "float";
             break;
@@ -175,6 +181,12 @@ static void st_info_type_print_val(st_opt_info_t *info, FILE *fp)
             break;
         case SOT_UINT:
             fprintf(fp, "%u", info->uval);
+            break;
+        case SOT_LONG:
+            fprintf(fp, "%ld", info->lval);
+            break;
+        case SOT_ULONG:
+            fprintf(fp, "%lu", info->ulval);
             break;
         case SOT_FLOAT:
             fprintf(fp, "%g", info->fval);
@@ -223,6 +235,12 @@ static int st_opt_add_info(st_opt_t *opt, st_opt_type_t type,
             break;
         case SOT_UINT:
             info->uval = *(uint *)value;
+            break;
+        case SOT_LONG:
+            info->lval = *(long *)value;
+            break;
+        case SOT_ULONG:
+            info->ulval = *(unsigned long *)value;
             break;
         case SOT_FLOAT:
             info->fval = *(float *)value;
@@ -309,8 +327,8 @@ void st_opt_show_usage(st_opt_t *opt, FILE *fp)
     }
 
     fprintf(fp, "\n");
-    fprintf(fp, "Format: --key=value\n");
-    fprintf(fp, "        --key (only for bool option)\n");
+    fprintf(fp, "Format: --help\n");
+    fprintf(fp, "        --key=value\n");
     fprintf(fp, "        --sec^key=value (with section specified)\n");
 }
 
@@ -532,6 +550,63 @@ int st_opt_get_uint(st_opt_t *popt, const char *sec_name,
     }
 
     ret = st_opt_add_info(popt, SOT_UINT, sec_name, key,
+            (void *)&default_value, desc);
+
+    return ret;
+}
+
+int st_opt_get_long(st_opt_t *popt, const char *sec_name,
+        const char *key, long *value, long default_value, const char *desc)
+{
+    int ret;
+
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_long_def(popt->file_conf, sec_name, key, 
+                value, default_value);
+
+        if (st_conf_get_long(popt->cmd_conf, sec_name, key,
+                    value, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_long_def(popt->cmd_conf, sec_name, key,
+                    value, default_value) < 0) {
+            return -1;
+        }
+    }
+
+    ret = st_opt_add_info(popt, SOT_LONG, sec_name, key,
+            (void *)&default_value, desc);
+
+    return ret;
+}
+
+int st_opt_get_ulong(st_opt_t *popt, const char *sec_name,
+        const char *key, unsigned long *value, unsigned long default_value,
+        const char *desc)
+{
+    int ret;
+
+    if (popt->file_conf != NULL) {
+        ret = st_conf_get_ulong_def(popt->file_conf, sec_name, key, 
+                value, default_value);
+
+        if (st_conf_get_ulong(popt->cmd_conf, sec_name, key,
+                    value, NULL) < 0) {
+            if (ret < 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (st_conf_get_ulong_def(popt->cmd_conf, sec_name, key,
+                    value, default_value) < 0) {
+            return -1;
+        }
+    }
+
+    ret = st_opt_add_info(popt, SOT_ULONG, sec_name, key,
             (void *)&default_value, desc);
 
     return ret;

@@ -38,6 +38,8 @@ typedef enum _st_opt_type_t_ {
     SOT_BOOL,
     SOT_INT,
     SOT_UINT,
+    SOT_LONG,
+    SOT_ULONG,
     SOT_FLOAT,
     SOT_STR,
 } st_opt_type_t;
@@ -52,6 +54,8 @@ typedef struct _st_opt_info_t_ {
         int ival;
         uint uval;
         float fval;
+        long lval;
+        unsigned long ulval;
         char sval[MAX_ST_CONF_LEN];
     };
 } st_opt_info_t;
@@ -92,6 +96,14 @@ int st_opt_get_int(st_opt_t *popt, const char *sec_name,
 
 int st_opt_get_uint(st_opt_t *popt, const char *sec_name,
         const char *key, unsigned int *value, unsigned int default_value,
+        const char *desc);
+
+int st_opt_get_long(st_opt_t *popt, const char *sec_name,
+        const char *key, long *value, long default_value,
+        const char *desc);
+
+int st_opt_get_ulong(st_opt_t *popt, const char *sec_name,
+        const char *key, unsigned long *value, unsigned long default_value,
         const char *desc);
 
 int st_opt_get_str(st_opt_t *popt, const char *sec_name,
@@ -150,6 +162,42 @@ int st_opt_get_bool(st_opt_t *popt, const char *sec_name,
 #define ST_OPT_SEC_GET_UINT(pconf, sec, key, var, def, desc) \
     do{\
         if (st_opt_get_uint(pconf, sec, key, &var, def, desc) < 0) {\
+            ST_WARNING("Failed to getopt key[%s] "\
+                    "in section[%s].", key, sec);\
+            goto ST_OPT_ERR; \
+        }\
+    } while(0)
+
+#define ST_OPT_GET_LONG(pconf, key, var, def, desc) \
+    do{\
+        if (st_opt_get_long(pconf, NULL, key, &var, def, desc) < 0) {\
+            ST_WARNING("Failed to getopt key[%s] "\
+                    "in section[" DEF_SEC_NAME "].", key);\
+            goto ST_OPT_ERR; \
+        }\
+    } while(0)
+
+#define ST_OPT_SEC_GET_LONG(pconf, sec, key, var, def, desc) \
+    do{\
+        if (st_opt_get_long(pconf, sec, key, &var, def, desc) < 0) {\
+            ST_WARNING("Failed to getopt key[%s] "\
+                    "in section[%s].", key, sec);\
+            goto ST_OPT_ERR; \
+        }\
+    } while(0)
+
+#define ST_OPT_GET_ULONG(pconf, key, var, def, desc) \
+    do{\
+        if (st_opt_get_ulong(pconf, NULL, key, &var, def, desc) < 0) {\
+            ST_WARNING("Failed to getopt key[%s] "\
+                    "in section[" DEF_SEC_NAME "].", key);\
+            goto ST_OPT_ERR; \
+        }\
+    } while(0)
+
+#define ST_OPT_SEC_GET_ULONG(pconf, sec, key, var, def, desc) \
+    do{\
+        if (st_opt_get_ulong(pconf, sec, key, &var, def, desc) < 0) {\
             ST_WARNING("Failed to getopt key[%s] "\
                     "in section[%s].", key, sec);\
             goto ST_OPT_ERR; \
