@@ -855,7 +855,7 @@ void st_conf_show(st_conf_t *pconf, const char *header)
         if (pconf->secs[s].comment_out != 0) {
             continue;
         }
-        ST_CLEAN("[%s]", pconf->secs[s].name);
+        ST_CLEAN("[%s]", st_conf_normalize_key(pconf->secs[s].name));
         for (p = 0; p < pconf->secs[s].param_num; p++) {
             ST_CLEAN("%s{%s : %s}", pconf->secs[s].param[p].used ? "" : "*",
                     st_conf_normalize_key(pconf->secs[s].param[p].key), 
