@@ -24,6 +24,7 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <ctype.h>
 
 #include "st_macro.h"
 #include "st_log.h"
@@ -389,3 +390,128 @@ int st_readline(FILE *fp, const char *fmt, ...)
 
     return ret;
 }
+
+static bool need_quote(const char *str) {
+    const char *c = str;
+    if (*c == '\0') {
+        return true;  // Must quote empty string
+    } else {
+
+        // These seem not to be interpreted as long as there are no other "bad"
+        // characters involved (e.g. "," would be interpreted as part of something
+        // like a{b,c}, but not on its own.
+        const char *ok_chars = "[]~#^_-+=:.,/";
+
+        // Just want to make sure that a space character doesn't get automatically
+        // inserted here via an automated style-checking script, like it did before.
+
+        for (; *c != '\0'; c++) {
+            // For non-alphanumeric characters we have a list of characters which
+            // are OK. All others are forbidden (this is easier since the shell
+            // interprets most non-alphanumeric characters).
+            if (!isalnum(*c)) {
+                const char *d;
+                for (d = ok_chars; *d != '\0'; d++) if (*c == *d) break;
+                // If not alphanumeric or one of the "ok_chars", it must be escaped.
+                if (*d == '\0') return true;
+            }
+        }
+        return false;  // The string was OK. No quoting or escaping.
+    }
+}
+
+// Returns a quoted and escaped version of "str"
+// which has previously been determined to need escaping.
+// Our aim is to print out the command line in such a way that if it's
+// pasted into a shell, it will get passed to the program in the same way.
+static int quote(const char *str, char *ans, size_t ans_len) {
+    // For now we use the following rules:
+    // In the normal case, we quote with single-quote "'", and to escape
+    // a single-quote we use the string: '\'' (interpreted as closing the
+    // single-quote, putting an escaped single-quote from the shell, and
+    // then reopening the single quote).
+    char quote_char = '\'';
+    const char *escape_str = "'\\''";  // e.g. echo 'a'\''b' returns a'b
+
+    // If the string contains single-quotes that would need escaping this
+    // way, and we determine that the string could be safely double-quoted
+    // without requiring any escaping, then we double-quote the string.
+    // This is the case if the characters "`$\ do not appear in the string.
+    // e.g. see http://www.redhat.com/mirrors/LDP/LDP/abs/html/quotingvar.html
+    if (strchr(str, '\'') && !strpbrk(str, "\"`$\\")) {
+        quote_char = '"';
+        escape_str = "\\\"";  // should never be accessed.
+    }
+
+    size_t n = 0;
+    if (n >= ans_len - 1) {
+        return -1;
+    }
+    ans[n] = quote_char;
+    n++;
+
+    const char *c = str;
+    for (;*c != '\0'; c++) {
+        if (*c == quote_char) {
+            for(const char *p = escape_str; *p != '\0'; p++) {
+                if (n >= ans_len - 1) {
+                    return -1;
+                }
+                ans[n] = *p;
+                n++;
+            }
+        } else {
+            if (n >= ans_len - 1) {
+                return -1;
+            }
+            ans[n] = *c;
+            n++;
+        }
+    }
+    if (n >= ans_len - 1) {
+        return -1;
+    }
+    ans[n] = quote_char;
+    n++;
+    ans[n] = 0;
+
+    return 0;
+}
+
+int st_escape(const char *str, char *ans, size_t ans_len) {
+    if (need_quote(str)) {
+        return quote(str, ans, ans_len);
+    } else {
+        if (strlen(str) >= ans_len) {
+            return -1;
+        }
+        strcpy(ans, str);
+    }
+
+    return 0;
+}
+
+int st_escape_args(int argc, const char *argv[], char *ans, size_t ans_len)
+{
+    size_t len;
+    int i;
+
+    ans[0] = 0;
+    len = 0;
+    for (i = 0; i < argc; i++) {
+        if (st_escape(argv[i], ans + len, ans_len - len) < 0) {
+            ans[ans_len - 1] = 0;
+            return -1;
+        }
+        len = strlen(ans);
+        if (len >= ans_len - 2) {
+            break;
+        }
+        ans[len] = ' ';
+        len++;
+    }
+    ans[ans_len - 1] = 0;
+
+    return 0;
+}
+

@@ -69,6 +69,10 @@ void st_shuffle_r(int *a, size_t n, unsigned *rand);
 
 int st_readline(FILE *fp, const char *fmt, ...);
 
+int st_escape(const char *str, char *ans, size_t ans_len);
+
+int st_escape_args(int argc, const char *argv[], char *ans, size_t ans_len);
+
 #ifdef __cplusplus
 }
 #endif
