@@ -25,6 +25,8 @@
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <errno.h>
+#include <sys/stat.h>
 
 #include "st_macro.h"
 #include "st_log.h"
@@ -515,3 +517,15 @@ int st_escape_args(int argc, const char *argv[], char *ans, size_t ans_len)
     return 0;
 }
 
+off_t st_fsize(const char *filename) 
+{
+    struct stat st;
+
+    if (stat(filename, &st) == 0)
+        return st.st_size;
+
+    ST_WARNING("Cannot determine size of %s: %s\n",
+            filename, strerror(errno));
+
+    return -1;
+}

@@ -73,6 +73,8 @@ int st_escape(const char *str, char *ans, size_t ans_len);
 
 int st_escape_args(int argc, const char *argv[], char *ans, size_t ans_len);
 
+off_t st_fsize(const char *filename);
+
 #ifdef __cplusplus
 }
 #endif
