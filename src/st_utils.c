@@ -393,31 +393,32 @@ int st_readline(FILE *fp, const char *fmt, ...)
     return ret;
 }
 
-static bool need_quote(const char *str) {
+static bool need_quote(const char *str)
+{
+    const char *ok_chars = "[]~#^_-+=:.,/";
     const char *c = str;
+    const char *d;
+
     if (*c == '\0') {
         return true;  // Must quote empty string
     } else {
-
-        // These seem not to be interpreted as long as there are no other "bad"
-        // characters involved (e.g. "," would be interpreted as part of something
-        // like a{b,c}, but not on its own.
-        const char *ok_chars = "[]~#^_-+=:.,/";
-
-        // Just want to make sure that a space character doesn't get automatically
-        // inserted here via an automated style-checking script, like it did before.
-
         for (; *c != '\0'; c++) {
             // For non-alphanumeric characters we have a list of characters which
             // are OK. All others are forbidden (this is easier since the shell
             // interprets most non-alphanumeric characters).
             if (!isalnum(*c)) {
-                const char *d;
-                for (d = ok_chars; *d != '\0'; d++) if (*c == *d) break;
+                for (d = ok_chars; *d != '\0'; d++) {
+                    if (*c == *d) {
+                        break;
+                    }
+                }
                 // If not alphanumeric or one of the "ok_chars", it must be escaped.
-                if (*d == '\0') return true;
+                if (*d == '\0') {
+                    return true;
+                }
             }
         }
+
         return false;  // The string was OK. No quoting or escaping.
     }
 }
@@ -426,7 +427,8 @@ static bool need_quote(const char *str) {
 // which has previously been determined to need escaping.
 // Our aim is to print out the command line in such a way that if it's
 // pasted into a shell, it will get passed to the program in the same way.
-static int quote(const char *str, char *ans, size_t ans_len) {
+static int quote(const char *str, char *ans, size_t ans_len)
+{
     // For now we use the following rules:
     // In the normal case, we quote with single-quote "'", and to escape
     // a single-quote we use the string: '\'' (interpreted as closing the
@@ -434,6 +436,9 @@ static int quote(const char *str, char *ans, size_t ans_len) {
     // then reopening the single quote).
     char quote_char = '\'';
     const char *escape_str = "'\\''";  // e.g. echo 'a'\''b' returns a'b
+    size_t n;
+    const char *c;
+    const char *p;
 
     // If the string contains single-quotes that would need escaping this
     // way, and we determine that the string could be safely double-quoted
@@ -445,17 +450,17 @@ static int quote(const char *str, char *ans, size_t ans_len) {
         escape_str = "\\\"";  // should never be accessed.
     }
 
-    size_t n = 0;
+    n = 0;
     if (n >= ans_len - 1) {
         return -1;
     }
     ans[n] = quote_char;
     n++;
 
-    const char *c = str;
+    c = str;
     for (;*c != '\0'; c++) {
         if (*c == quote_char) {
-            for(const char *p = escape_str; *p != '\0'; p++) {
+            for(p = escape_str; *p != '\0'; p++) {
                 if (n >= ans_len - 1) {
                     return -1;
                 }
@@ -480,7 +485,8 @@ static int quote(const char *str, char *ans, size_t ans_len) {
     return 0;
 }
 
-int st_escape(const char *str, char *ans, size_t ans_len) {
+int st_escape(const char *str, char *ans, size_t ans_len)
+{
     if (need_quote(str)) {
         return quote(str, ans, ans_len);
     } else {
