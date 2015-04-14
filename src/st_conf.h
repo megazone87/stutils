@@ -93,8 +93,8 @@ int st_resolve_param(const char *line, st_conf_t *pconf,
 int st_conf_add_param(st_conf_section_t *sec, const char *key, 
         const char *value);
 
-int st_conf_get_float(st_conf_t *pconf, const char *sec_name,
-        const char *key, float *value, int *sec_i);
+int st_conf_get_double(st_conf_t *pconf, const char *sec_name,
+        const char *key, double *value, int *sec_i);
 
 int st_conf_get_int(st_conf_t * pconf, const char *sec_name,
         const char *key, int *value, int *sec_i);
@@ -114,8 +114,8 @@ int st_conf_get_str(st_conf_t * pconf, const char *sec_name,
 int st_conf_get_bool(st_conf_t *pconf, const char *sec_name,
         const char *key, bool *value, int *sec_i);
 
-int st_conf_get_float_def(st_conf_t *pconf, const char *sec_name,
-        const char *key, float *value, float default_value);
+int st_conf_get_double_def(st_conf_t *pconf, const char *sec_name,
+        const char *key, double *value, double default_value);
 
 int st_conf_get_int_def(st_conf_t *pconf, const char *sec_name,
         const char *key, int *value, int default_value);
@@ -351,35 +351,35 @@ int st_conf_get_bool_def(st_conf_t *pconf, const char *sec_name,
         }\
     } while(0)
 
-#define ST_CONF_GET_FLOAT(pconf, key, var) \
+#define ST_CONF_GET_DOUBLE(pconf, key, var) \
     do{\
-        if (st_conf_get_float(pconf, NULL, key, &var, NULL) < 0) {\
+        if (st_conf_get_double(pconf, NULL, key, &var, NULL) < 0) {\
             ST_WARNING("Failed to load key[%s] "\
                     "in section[" DEF_SEC_NAME "].", key);\
             goto ST_CONF_ERR; \
         }\
     } while(0)
 
-#define ST_CONF_GET_FLOAT_DEF(pconf, key, var, def) \
+#define ST_CONF_GET_DOUBLE_DEF(pconf, key, var, def) \
     do{\
-        if (st_conf_get_float_def(pconf, NULL, key, &var, def) < 0) {\
+        if (st_conf_get_double_def(pconf, NULL, key, &var, def) < 0) {\
             ST_WARNING("Failed to load key[%s] "\
                     "in section[" DEF_SEC_NAME "].", key);\
             goto ST_CONF_ERR; \
     } while(0)
 
-#define ST_CONF_SEC_GET_FLOAT(pconf, sec, key, var) \
+#define ST_CONF_SEC_GET_DOUBLE(pconf, sec, key, var) \
     do{\
-        if (st_conf_get_float(pconf, sec, key, &var, NULL) < 0) {\
+        if (st_conf_get_double(pconf, sec, key, &var, NULL) < 0) {\
             ST_WARNING("Failed to load key[%s] "\
                     "in section[%s].", key, sec);\
             goto ST_CONF_ERR; \
         }\
     } while(0)
 
-#define ST_CONF_SEC_GET_FLOAT_DEF(pconf, sec, key, var, def) \
+#define ST_CONF_SEC_GET_DOUBLE_DEF(pconf, sec, key, var, def) \
     do{\
-        if (st_conf_get_float_def(pconf, sec, key, &var, def) < 0) {\
+        if (st_conf_get_double_def(pconf, sec, key, &var, def) < 0) {\
             ST_WARNING("Failed to load key[%s] "\
                     "in section[%s].", key, sec);\
             goto ST_CONF_ERR; \

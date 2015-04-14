@@ -40,7 +40,7 @@ typedef enum _st_opt_type_t_ {
     SOT_UINT,
     SOT_LONG,
     SOT_ULONG,
-    SOT_FLOAT,
+    SOT_DOUBLE,
     SOT_STR,
 } st_opt_type_t;
 
@@ -53,7 +53,7 @@ typedef struct _st_opt_info_t_ {
         bool bval;
         int ival;
         uint uval;
-        float fval;
+        double fval;
         long lval;
         unsigned long ulval;
         char sval[MAX_ST_CONF_LEN];
@@ -86,8 +86,8 @@ void st_opt_show(st_opt_t *popt, const char *header);
 
 void st_opt_show_usage(st_opt_t *opt, FILE *fp);
 
-int st_opt_get_float(st_opt_t *popt, const char *sec_name,
-        const char *key, float *value, float default_value,
+int st_opt_get_double(st_opt_t *popt, const char *sec_name,
+        const char *key, double *value, double default_value,
         const char *desc);
 
 int st_opt_get_int(st_opt_t *popt, const char *sec_name,
@@ -222,17 +222,17 @@ int st_opt_get_bool(st_opt_t *popt, const char *sec_name,
         }\
     } while(0)
 
-#define ST_OPT_GET_FLOAT(pconf, key, var, def, desc) \
+#define ST_OPT_GET_DOUBLE(pconf, key, var, def, desc) \
     do{\
-        if (st_opt_get_float(pconf, NULL, key, &var, def, desc) < 0) {\
+        if (st_opt_get_double(pconf, NULL, key, &var, def, desc) < 0) {\
             ST_WARNING("Failed to getopt key[%s] "\
                     "in section[" DEF_SEC_NAME "].", key);\
             goto ST_OPT_ERR; \
     } while(0)
 
-#define ST_OPT_SEC_GET_FLOAT(pconf, sec, key, var, def, desc) \
+#define ST_OPT_SEC_GET_DOUBLE(pconf, sec, key, var, def, desc) \
     do{\
-        if (st_opt_get_float(pconf, sec, key, &var, def, desc) < 0) {\
+        if (st_opt_get_double(pconf, sec, key, &var, def, desc) < 0) {\
             ST_WARNING("Failed to getopt key[%s] "\
                     "in section[%s].", key, sec);\
             goto ST_OPT_ERR; \

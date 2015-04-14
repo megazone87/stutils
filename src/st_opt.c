@@ -155,8 +155,8 @@ static char* st_opt_type_str(st_opt_type_t type)
         case SOT_ULONG:
             return "ulong";
             break;
-        case SOT_FLOAT:
-            return "float";
+        case SOT_DOUBLE:
+            return "double";
             break;
         case SOT_STR:
             return "string";
@@ -188,7 +188,7 @@ static void st_info_type_print_val(st_opt_info_t *info, FILE *fp)
         case SOT_ULONG:
             fprintf(fp, "%lu", info->ulval);
             break;
-        case SOT_FLOAT:
+        case SOT_DOUBLE:
             fprintf(fp, "%g", info->fval);
             break;
         case SOT_STR:
@@ -242,8 +242,8 @@ static int st_opt_add_info(st_opt_t *opt, st_opt_type_t type,
         case SOT_ULONG:
             info->ulval = *(unsigned long *)value;
             break;
-        case SOT_FLOAT:
-            info->fval = *(float *)value;
+        case SOT_DOUBLE:
+            info->fval = *(double *)value;
             break;
         case SOT_STR:
             strncpy(info->sval, (char *)value, MAX_ST_CONF_LEN);
@@ -612,30 +612,30 @@ int st_opt_get_ulong(st_opt_t *popt, const char *sec_name,
     return ret;
 }
 
-int st_opt_get_float(st_opt_t *popt, const char *sec_name,
-        const char *key, float *value, float default_value,
+int st_opt_get_double(st_opt_t *popt, const char *sec_name,
+        const char *key, double *value, double default_value,
         const char *desc)
 {
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_float_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_double_def(popt->file_conf, sec_name, key, 
                 value, default_value);
 
-        if (st_conf_get_float(popt->cmd_conf, sec_name, key,
+        if (st_conf_get_double(popt->cmd_conf, sec_name, key,
                     value, NULL) < 0) {
             if (ret < 0) {
                 return -1;
             }
         }
     } else {
-        if (st_conf_get_float_def(popt->cmd_conf, sec_name, key,
+        if (st_conf_get_double_def(popt->cmd_conf, sec_name, key,
                     value, default_value) < 0) {
             return -1;
         }
     }
     
-    ret = st_opt_add_info(popt, SOT_FLOAT, sec_name, key,
+    ret = st_opt_add_info(popt, SOT_DOUBLE, sec_name, key,
             (void *)&default_value, desc);
 
     return ret;

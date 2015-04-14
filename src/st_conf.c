@@ -737,8 +737,8 @@ int st_conf_get_ulong_def(st_conf_t *pconf, const char *sec_name,
     return 0;
 }
 
-int st_conf_get_float(st_conf_t *pconf, const char *sec_name,
-        const char *key, float *value, int *sec_i)
+int st_conf_get_double(st_conf_t *pconf, const char *sec_name,
+        const char *key, double *value, int *sec_i)
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
@@ -762,13 +762,13 @@ int st_conf_get_float(st_conf_t *pconf, const char *sec_name,
     return 0;
 }
 
-int st_conf_get_float_def(st_conf_t *pconf, const char *sec_name,
-        const char *key, float *value, float default_value)
+int st_conf_get_double_def(st_conf_t *pconf, const char *sec_name,
+        const char *key, double *value, double default_value)
 {
     st_conf_section_t *sec;
     int sec_i = -1;
 
-    if (st_conf_get_float(pconf, sec_name, key, value, &sec_i) < 0) {
+    if (st_conf_get_double(pconf, sec_name, key, value, &sec_i) < 0) {
         *value = default_value;
 
         if (sec_i < 0) {

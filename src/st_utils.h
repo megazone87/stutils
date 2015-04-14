@@ -75,6 +75,24 @@ int st_escape_args(int argc, const char *argv[], char *ans, size_t ans_len);
 
 off_t st_fsize(const char *filename);
 
+typedef struct _st_gauss_r_t {
+    double mean;
+    double stdev;
+    unsigned seed;
+
+    double V1;
+    double V2; 
+    double S;
+    int phase;
+} st_gauss_r_t;
+
+double st_gaussrand();
+double st_normrand(double mean, double stdev);
+
+void st_gauss_r_init(st_gauss_r_t *gauss, double mean,
+        double stdev, unsigned seed);
+double st_gaussrand_r(st_gauss_r_t *gauss);
+
 #ifdef __cplusplus
 }
 #endif

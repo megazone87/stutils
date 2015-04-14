@@ -26,6 +26,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <errno.h>
+#include <math.h>
 #include <sys/stat.h>
 
 #include "st_macro.h"
@@ -359,14 +360,14 @@ void st_shuffle(int *a, size_t n)
     }
 }
 
-void st_shuffle_r(int *a, size_t n, unsigned *rand)
+void st_shuffle_r(int *a, size_t n, unsigned *seed)
 {
     size_t i = n - 1;
     size_t j;
     int t;
 
     while (i > 1) {
-        j = (size_t)((double)i * ( rand_r(rand) / (RAND_MAX + 1.0) ));
+        j = (size_t)((double)i * ( rand_r(seed) / (RAND_MAX + 1.0) ));
 
         t = a[j];
         a[j] = a[i];
@@ -535,3 +536,68 @@ off_t st_fsize(const char *filename)
 
     return -1;
 }
+
+double st_gaussrand()
+{
+    static double V1, V2, S;
+    static int phase = 0;
+    double X;
+
+    if(phase == 0) {
+        do {
+            double U1 = (double)rand() / RAND_MAX;
+            double U2 = (double)rand() / RAND_MAX;
+
+            V1 = 2 * U1 - 1;
+            V2 = 2 * U2 - 1;
+            S = V1 * V1 + V2 * V2;
+        } while(S >= 1 || S == 0);
+
+        X = V1 * sqrt(-2 * log(S) / S);
+    } else
+        X = V2 * sqrt(-2 * log(S) / S);
+
+    phase = 1 - phase;
+
+    return X;
+}
+
+double st_normrand(double mean, double stdev)
+{
+    return ((stdev * st_gaussrand()) + mean);
+}
+
+void st_gauss_r_init(st_gauss_r_t *gauss, double mean,
+        double stdev, unsigned seed)
+{
+    memset(gauss, 0, sizeof(st_gauss_r_t));
+    gauss->mean = mean;
+    gauss->stdev = stdev;
+    gauss->seed = seed;
+}
+
+double st_gaussrand_r(st_gauss_r_t *gauss)
+{
+    double U1;
+    double U2;
+    double X;
+
+    if(gauss->phase == 0) {
+        do {
+            U1 = (double)rand_r(&gauss->seed) / RAND_MAX;
+            U2 = (double)rand_r(&gauss->seed) / RAND_MAX;
+
+            gauss->V1 = 2 * U1 - 1;
+            gauss->V2 = 2 * U2 - 1;
+            gauss->S = gauss->V1 * gauss->V1 + gauss->V2 * gauss->V2;
+        } while(gauss->S >= 1 || gauss->S == 0);
+
+        X = gauss->V1 * sqrt(-2 * log(gauss->S) / gauss->S);
+    } else
+        X = gauss->V2 * sqrt(-2 * log(gauss->S) / gauss->S);
+
+    gauss->phase = 1 - gauss->phase;
+
+    return ((gauss->stdev * X) + gauss->mean);
+}
+
