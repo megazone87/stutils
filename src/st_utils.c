@@ -376,47 +376,75 @@ void st_shuffle_r(int *a, size_t n, unsigned *seed)
     }
 }
 
-char* st_fgets(char **line, size_t *n, FILE *fp) 
+char* st_fgets(char **line, size_t *sz, FILE *fp) 
 {
     char *ptr;
     size_t old_sz;
+    size_t n;
 
-    ST_CHECK_PARAM(line == NULL || n == NULL || fp == NULL, NULL);
+    int ch;
 
-    if (*line == NULL || *n <= 0) {
+    ST_CHECK_PARAM(line == NULL || sz == NULL || fp == NULL, NULL);
+
+    if (*line == NULL || *sz <= 0) {
         *line = (char *)malloc(MAX_LINE_LEN);
         if (*line == NULL) {
             ST_WARNING("Failed to malloc line");
             goto ERR;
         }
-        *n = MAX_LINE_LEN;
+        *sz = MAX_LINE_LEN;
     }
 
-    if (fgets(*line, *n, fp) == NULL) {
-        return NULL;
+    ptr = *line;
+    n = *sz;
+
+    while (--n) {
+        if ((ch = getc(fp)) == EOF) {
+            if (ptr == *line) {
+                return NULL;
+            }
+            break;
+        }
+
+        if ((*ptr++ = ch) == '\n') {
+            break;
+        }
     }
 
-    if ((*line)[strlen(*line) - 1] == '\n') {
+    if (n > 0) {
+        *ptr = '\0';
         return *line;
     }
 
     do {
-        old_sz = *n;
-        *n *= 2;
+        old_sz = *sz;
+        *sz *= 2;
 
-        *line = (char *)realloc(*line, *n);
+        *line = (char *)realloc(*line, *sz);
         if (*line == NULL) {
             ST_WARNING("Failed to malloc line");
             goto ERR;
         }
 
         ptr = (*line) + old_sz - 1;
-    } while (fgets(ptr, old_sz + 1, fp) != NULL
-            && ptr[strlen(ptr) - 1] != '\n');
+        n = old_sz + 1;
+
+        while (--n) {
+            if ((ch = getc(fp)) == EOF) {
+                break;
+            }
+
+            if ((*ptr++ = ch) == '\n') {
+                break;
+            }
+        }
+    } while (n > 0);
+
+    *ptr = '\0';
 
     return *line;
 ERR:
-    *n = 0;
+    *sz = 0;
     return NULL;
 }
 
