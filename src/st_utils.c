@@ -376,22 +376,73 @@ void st_shuffle_r(int *a, size_t n, unsigned *seed)
     }
 }
 
+char* st_fgets(char **line, size_t *n, FILE *fp) 
+{
+    char *ptr;
+    size_t old_sz;
+
+    ST_CHECK_PARAM(line == NULL || n == NULL || fp == NULL, NULL);
+
+    if (*line == NULL || *n <= 0) {
+        *line = (char *)malloc(MAX_LINE_LEN);
+        if (*line == NULL) {
+            ST_WARNING("Failed to malloc line");
+            goto ERR;
+        }
+        *n = MAX_LINE_LEN;
+    }
+
+    if (fgets(*line, *n, fp) == NULL) {
+        return NULL;
+    }
+
+    if ((*line)[strlen(*line) - 1] == '\n') {
+        return *line;
+    }
+
+    do {
+        old_sz = *n;
+        *n *= 2;
+
+        *line = (char *)realloc(*line, *n);
+        if (*line == NULL) {
+            ST_WARNING("Failed to malloc line");
+            goto ERR;
+        }
+
+        ptr = (*line) + old_sz - 1;
+    } while (fgets(ptr, old_sz + 1, fp) != NULL
+            && ptr[strlen(ptr) - 1] != '\n');
+
+    return *line;
+ERR:
+    *n = 0;
+    return NULL;
+}
+
 int st_readline(FILE *fp, const char *fmt, ...) 
 {
-    char line[MAX_LINE_LEN];
+    char *line = NULL;
+    size_t sz = 0;
+
     va_list args;
     int ret;
 
-    if (fgets(line, MAX_LINE_LEN, fp) == NULL) {
+    if (st_fgets(&line, &sz, fp) == NULL) {
         ST_WARNING("Failed to read line.");
-        return -1;
+        goto ERR;
     }
 
     va_start (args, fmt);
     ret = vsscanf(line, fmt, args);
     va_end (args);
 
+    safe_free(line);
     return ret;
+
+ERR:
+    safe_free(line);
+    return -1;
 }
 
 static bool need_quote(const char *str)

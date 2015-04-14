@@ -67,6 +67,7 @@ uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
 void st_shuffle(int *a, size_t n);
 void st_shuffle_r(int *a, size_t n, unsigned *rand);
 
+char* st_fgets(char **line, size_t *n, FILE *fp);
 int st_readline(FILE *fp, const char *fmt, ...);
 
 int st_escape(const char *str, char *ans, size_t ans_len);
