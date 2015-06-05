@@ -64,6 +64,12 @@ void remove_newline(char *line);
 
 uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
 
+/* The largest number rand will return (same as INT_MAX).  */
+#define ST_RAND_MAX        2147483647
+int st_rand();
+int st_rand_r(unsigned int *seed);
+void st_srand(unsigned int seed);
+
 void st_shuffle(int *a, size_t n);
 void st_shuffle_r(int *a, size_t n, unsigned *rand);
 

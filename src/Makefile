@@ -2,7 +2,7 @@ UNAME_S := $(shell uname -s)
 
 GCC = gcc
 CFLAGS = -Wall -pipe -g -m64
-#CFLAGS += -march=native -mtune=native -O3
+CFLAGS += -march=native -mtune=native -O3
 CFLAGS += -DNDEBUG
 #CFLAGS += -pg
 #LDFLAGS += -pg

@@ -344,6 +344,25 @@ uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed )
   return h;
 } 
 
+static unsigned st_rand_state = -1726662223;
+
+int st_rand()
+{
+    return st_rand_r(&st_rand_state);
+}
+
+/* the magic numbers is from stdlibc */
+int st_rand_r(unsigned *seed)
+{
+    *seed = (((*seed) * 1103515245) + 12345) & 0x7fffffff;
+    return (int)*seed;
+}
+
+void st_srand(unsigned int seed)
+{
+    st_rand_state = seed;
+}
+
 void st_shuffle(int *a, size_t n)
 {
     size_t i = n - 1;
@@ -351,7 +370,7 @@ void st_shuffle(int *a, size_t n)
     int t;
 
     while (i > 1) {
-        j = (size_t)((double)i * ( rand() / (RAND_MAX + 1.0) ));
+        j = (size_t)((double)i * ( st_rand() / (ST_RAND_MAX + 1.0) ));
 
         t = a[j];
         a[j] = a[i];
@@ -367,7 +386,7 @@ void st_shuffle_r(int *a, size_t n, unsigned *seed)
     int t;
 
     while (i > 1) {
-        j = (size_t)((double)i * ( rand_r(seed) / (RAND_MAX + 1.0) ));
+        j = (size_t)((double)i * ( st_rand_r(seed) / (ST_RAND_MAX + 1.0) ));
 
         t = a[j];
         a[j] = a[i];
@@ -624,8 +643,8 @@ double st_gaussrand()
 
     if(phase == 0) {
         do {
-            double U1 = (double)rand() / RAND_MAX;
-            double U2 = (double)rand() / RAND_MAX;
+            double U1 = (double)st_rand() / ST_RAND_MAX;
+            double U2 = (double)st_rand() / ST_RAND_MAX;
 
             V1 = 2 * U1 - 1;
             V2 = 2 * U2 - 1;
@@ -663,8 +682,8 @@ double st_gaussrand_r(st_gauss_r_t *gauss)
 
     if(gauss->phase == 0) {
         do {
-            U1 = (double)rand_r(&gauss->seed) / RAND_MAX;
-            U2 = (double)rand_r(&gauss->seed) / RAND_MAX;
+            U1 = (double)st_rand_r(&gauss->seed) / ST_RAND_MAX;
+            U2 = (double)st_rand_r(&gauss->seed) / ST_RAND_MAX;
 
             gauss->V1 = 2 * U1 - 1;
             gauss->V2 = 2 * U2 - 1;
