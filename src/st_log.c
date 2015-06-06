@@ -118,7 +118,8 @@ int st_log_open(st_log_opt_t *log_opt)
     char now[20];
 
     if (log_opt == NULL || log_opt->file[0] == '\0'
-            || (log_opt->file[0] == '-' && log_opt->file[1] == '\0')) {
+            || (log_opt->file[0] == '-' && log_opt->file[1] == '\0')
+            || (strcmp(log_opt->file, "/dev/stdout") == 0)) {
         g_normal_fp = stdout;
         g_wf_fp = stderr;
     } else if (log_opt != NULL 
