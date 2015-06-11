@@ -472,6 +472,7 @@ static int st_alphabet_load_bin(st_alphabet_t *alphabet, FILE *fp)
         ST_WARNING("Failed to read label_num");
         return -1;
     }
+    alphabet->max_label_num = alphabet->label_num;
     
     ret = fread(&alphabet->aux_num, sizeof(int), 1, fp);
     if(ret != 1)
