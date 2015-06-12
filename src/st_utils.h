@@ -73,7 +73,7 @@ void st_srand(unsigned int seed);
 void st_shuffle(int *a, size_t n);
 void st_shuffle_r(int *a, size_t n, unsigned *rand);
 
-char* st_fgets(char **line, size_t *n, FILE *fp);
+char* st_fgets(char **line, size_t *sz, FILE *fp, bool *err);
 int st_readline(FILE *fp, const char *fmt, ...);
 
 int st_escape(const char *str, char *ans, size_t ans_len);

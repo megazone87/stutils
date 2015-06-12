@@ -395,7 +395,7 @@ void st_shuffle_r(int *a, size_t n, unsigned *seed)
     }
 }
 
-char* st_fgets(char **line, size_t *sz, FILE *fp) 
+char* st_fgets(char **line, size_t *sz, FILE *fp, bool *err) 
 {
     char *ptr;
     size_t old_sz;
@@ -404,6 +404,10 @@ char* st_fgets(char **line, size_t *sz, FILE *fp)
     int ch;
 
     ST_CHECK_PARAM(line == NULL || sz == NULL || fp == NULL, NULL);
+
+    if (err != NULL) {
+        *err = false;
+    }
 
     if (*line == NULL || *sz <= 0) {
         *line = (char *)malloc(MAX_LINE_LEN);
@@ -441,7 +445,8 @@ char* st_fgets(char **line, size_t *sz, FILE *fp)
 
         *line = (char *)realloc(*line, *sz);
         if (*line == NULL) {
-            ST_WARNING("Failed to malloc line");
+            ST_WARNING("Failed to realloc line. size[%zu -> %zu]",
+                    old_sz, *sz);
             goto ERR;
         }
 
@@ -457,13 +462,16 @@ char* st_fgets(char **line, size_t *sz, FILE *fp)
                 break;
             }
         }
-    } while (n > 0);
+    } while (n == 0);
 
     *ptr = '\0';
 
     return *line;
 ERR:
     *sz = 0;
+    if (err != NULL) {
+        *err = true;
+    }
     return NULL;
 }
 
@@ -475,7 +483,7 @@ int st_readline(FILE *fp, const char *fmt, ...)
     va_list args;
     int ret;
 
-    if (st_fgets(&line, &sz, fp) == NULL) {
+    if (st_fgets(&line, &sz, fp, NULL) == NULL) {
         ST_WARNING("Failed to read line.");
         goto ERR;
     }
