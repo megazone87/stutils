@@ -13,6 +13,12 @@ OUTLIBDIR = ../lib
 OUTINCDIR = ../include/stutils
 SO_OBJ = ./so_obj
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+LDFLAGS+=
+else
+LDFLAGS+=-lm
+endif
 LDFLAGS += -lpthread
 LDFLAGS += -Wl,-rpath,'$$ORIGIN'
 LDFLAGS += -Wl,-rpath,$(shell pwd)/$(OUTLIBDIR)
@@ -72,7 +78,7 @@ clean:
 	rm -f tags cscope.*
 
 $(TARGET_TEST_BIN) : $(BINDIR)/%-test: $(addprefix $(BIN_OBJ)/, %-test.o) $(TARGET_SO) $(TARGET_INC)
-	$(GCC) $(CFLAGS) -o $@ $< $(LDFLAGS) -L$(OUTLIBDIR) -lstutils 
+	$(GCC) $(CFLAGS) -o $@ $< -L$(OUTLIBDIR) -lstutils $(LDFLAGS) 
 
 test: preparedir $(TARGET_TEST_BIN)
 	@result=0; for x in $(TARGET_TEST_BIN); do printf "Running $$x ..."; ./$$x >/dev/null 2>&1; if [ $$? -ne 0 ]; then echo "... FAIL $$x"; result=1; else echo "... SUCCESS";  fi;  done; exit $$result
