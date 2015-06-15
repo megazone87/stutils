@@ -707,3 +707,42 @@ double st_gaussrand_r(st_gauss_r_t *gauss)
     return ((gauss->stdev * X) + gauss->mean);
 }
 
+// from glibc qsort.c -- http://www.cs.umaine.edu/~chaw/200801/capstone/n/qsort.c.html
+/* Byte-wise swap two items of size SIZE. */
+#define SWAP(a, b, size) \
+  do { \
+      register size_t __size = (size); \
+      register char *__a = (a), *__b = (b); \
+      do { \
+          char __tmp = *__a; \
+          *__a++ = *__b; \
+          *__b++ = __tmp; \
+        } while (--__size > 0); \
+    } while (0)
+
+static int st_allrange(void *base, size_t i, size_t n, size_t sz,
+        int (*callback)(void *base, size_t n, void *args), void *args)
+{
+    size_t k;
+
+    if (i == n - 1) {
+        return callback(base, n, args);
+    }
+
+    for (k = i; k < n; k++) {
+        SWAP((char *)base + i * sz, (char *)base + k * sz, sz);
+        if (st_allrange(base, i + 1, n, sz, callback, args) < 0) {
+            return -1;
+        }
+        SWAP((char *)base + i * sz, (char *)base + k * sz, sz);
+    }
+
+    return 0;
+}
+
+int st_permutation(void *base, size_t n, size_t sz,
+        int (*callback)(void *base, size_t n, void *args), void *args)
+{
+    return st_allrange(base, 0, n, sz, callback, args);
+}
+

@@ -100,6 +100,9 @@ void st_gauss_r_init(st_gauss_r_t *gauss, double mean,
         double stdev, unsigned seed);
 double st_gaussrand_r(st_gauss_r_t *gauss);
 
+int st_permutation(void *base, size_t n, size_t sz,
+        int (*callback)(void *base, size_t n, void *args), void *args);
+
 #ifdef __cplusplus
 }
 #endif

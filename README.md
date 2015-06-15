@@ -1,6 +1,9 @@
 # stutils
 A Utils Library.
 
+[![Build Status](https://travis-ci.org/wantee/stutils.svg)](https://travis-ci.org/wantee/stutils)
+[![License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/wantee/stutils/blob/master/LICENSE)
+
 ## Features
 * Logging
 * Configure

@@ -1,0 +1,12 @@
+language: c
+compiler:
+  - clang
+  - gcc
+install:
+  - make -C src
+script: 
+  - make test
+notifications:
+  email:
+    on_success: always
+    on_failure: always
