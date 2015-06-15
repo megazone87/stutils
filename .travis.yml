@@ -5,7 +5,7 @@ compiler:
 install:
   - make -C src
 script: 
-  - make test
+  - make -C src test
 notifications:
   email:
     on_success: always
