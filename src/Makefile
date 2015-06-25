@@ -25,11 +25,12 @@ LDFLAGS += -Wl,-rpath,$(shell pwd)/$(OUTLIBDIR)
 
 INC = st_dict.h st_alphabet.h st_utils.h st_conf.h st_log.h \
              st_macro.h st_queue.h st_stack.h st_heap.h st_net.h \
-             st_io.h st_opt.h
+             st_io.h st_opt.h st_semaphore.h
 TARGET_INC = $(addprefix $(OUTINCDIR)/, $(INC))
 
 OBJ_SO = st_dict.o st_alphabet.o st_utils.o st_conf.o st_log.o \
-         st_queue.o st_stack.o st_heap.o st_net.o st_io.o st_opt.o
+         st_queue.o st_stack.o st_heap.o st_net.o st_io.o st_opt.o \
+         st_semaphore.o
 
 ifeq ($(UNAME_S),Darwin)
 TARGET_SO = $(OUTLIBDIR)/libstutils.dylib
