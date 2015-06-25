@@ -44,6 +44,8 @@ TEST_BIN = st-utils-test
 
 TARGET_TEST_BIN = $(addprefix $(BINDIR)/, $(TEST_BIN))
 
+.PHONY: all preparedir clean test doc lint-check
+
 all:  preparedir $(TARGET_SO) $(TARGET_INC)
 
 preparedir: 
@@ -84,3 +86,5 @@ $(TARGET_TEST_BIN) : $(BINDIR)/%-test: $(addprefix $(BIN_OBJ)/, %-test.o) $(TARG
 test: preparedir $(TARGET_TEST_BIN)
 	@result=0; for x in $(TARGET_TEST_BIN); do printf "Running $$x ..."; ./$$x >/dev/null 2>&1; if [ $$? -ne 0 ]; then echo "... FAIL $$x"; result=1; else echo "... SUCCESS";  fi;  done; exit $$result
 
+doc: 
+	doxygen doc/Doxyfile

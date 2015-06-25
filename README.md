@@ -10,6 +10,7 @@ A Utils Library.
 * Data structure, eg. Stack, Queue, Heap
 * Socket wrapper
 * Dict and Alphabet
+* Semaphore
 
 ## Usage
 First, Build the library,
