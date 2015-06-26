@@ -30,6 +30,7 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
+#include <strings.h>
 #include <sys/time.h>
 
 #define MAX_LINE_LEN        4096

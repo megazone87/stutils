@@ -365,10 +365,15 @@ void st_srand(unsigned int seed)
 
 void st_shuffle(int *a, size_t n)
 {
-    size_t i = n - 1;
+    size_t i;
     size_t j;
     int t;
 
+    if (n <= 0) {
+        return;
+    }
+
+    i = n - 1;
     while (i > 1) {
         j = (size_t)((double)i * ( st_rand() / (ST_RAND_MAX + 1.0) ));
 
@@ -381,10 +386,15 @@ void st_shuffle(int *a, size_t n)
 
 void st_shuffle_r(int *a, size_t n, unsigned *seed)
 {
-    size_t i = n - 1;
+    size_t i;
     size_t j;
     int t;
 
+    if (n <= 0) {
+        return;
+    }
+
+    i = n - 1;
     while (i > 1) {
         j = (size_t)((double)i * ( st_rand_r(seed) / (ST_RAND_MAX + 1.0) ));
 
