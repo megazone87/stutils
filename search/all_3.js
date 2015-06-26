@@ -16,6 +16,7 @@ var searchData=
   ['st_5fopt_5ft',['st_opt_t',['../structst__opt__t.html',1,'']]],
   ['st_5fqueue_5ft',['st_queue_t',['../structst__queue__t.html',1,'']]],
   ['st_5fsem_5fdestroy',['st_sem_destroy',['../group__semaphore.html#ga664edb2fb7e2033d9ed60dbedb2c496c',1,'st_semaphore.h']]],
+  ['st_5fsem_5fgetvalue',['st_sem_getvalue',['../group__semaphore.html#ga847a4d2038514b827eed7d8ec52a448e',1,'st_semaphore.h']]],
   ['st_5fsem_5finit',['st_sem_init',['../group__semaphore.html#gac7ea59ff5530a373f087e2459b655649',1,'st_semaphore.h']]],
   ['st_5fsem_5fpost',['st_sem_post',['../group__semaphore.html#ga5d1a057c56c3119862a4a23ff19588ef',1,'st_semaphore.h']]],
   ['st_5fsem_5ft',['st_sem_t',['../structst__sem__t.html',1,'']]],

@@ -6,6 +6,7 @@ var group__semaphore =
       [ "value", "structst__sem__t.html#aaf06fd60652aedd4cbf0bd1d44da2b8a", null ]
     ] ],
     [ "st_sem_destroy", "group__semaphore.html#ga664edb2fb7e2033d9ed60dbedb2c496c", null ],
+    [ "st_sem_getvalue", "group__semaphore.html#ga847a4d2038514b827eed7d8ec52a448e", null ],
     [ "st_sem_init", "group__semaphore.html#gac7ea59ff5530a373f087e2459b655649", null ],
     [ "st_sem_post", "group__semaphore.html#ga5d1a057c56c3119862a4a23ff19588ef", null ],
     [ "st_sem_wait", "group__semaphore.html#ga8665106ec032d1213ff99fc51ea2e1dd", null ]

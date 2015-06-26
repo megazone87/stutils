@@ -129,6 +129,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5d1a057c56c3119862a4a23ff19588ef"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__semaphore.html#ga5d1a057c56c3119862a4a23ff19588ef">st_sem_post</a> (<a class="el" href="structst__sem__t.html">st_sem_t</a> *sem)</td></tr>
 <tr class="memdesc:ga5d1a057c56c3119862a4a23ff19588ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlock a semaphore.  <a href="#ga5d1a057c56c3119862a4a23ff19588ef">More...</a><br /></td></tr>
 <tr class="separator:ga5d1a057c56c3119862a4a23ff19588ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga847a4d2038514b827eed7d8ec52a448e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__semaphore.html#ga847a4d2038514b827eed7d8ec52a448e">st_sem_getvalue</a> (<a class="el" href="structst__sem__t.html">st_sem_t</a> *sem, int *val)</td></tr>
+<tr class="memdesc:ga847a4d2038514b827eed7d8ec52a448e"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the value of a semaphore  <a href="#ga847a4d2038514b827eed7d8ec52a448e">More...</a><br /></td></tr>
+<tr class="separator:ga847a4d2038514b827eed7d8ec52a448e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Data structures and functions for Semaphore. </p>
@@ -151,6 +154,42 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">sem</td><td>semaphore to be destroyed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-zero value if any error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga847a4d2038514b827eed7d8ec52a448e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int st_sem_getvalue </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structst__sem__t.html">st_sem_t</a> *&#160;</td>
+          <td class="paramname"><em>sem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the value of a semaphore </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">sem</td><td>the semaphore. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">val</td><td>value of the semaphore. </td></tr>
   </table>
   </dd>
 </dl>
@@ -249,7 +288,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jun 25 2015 17:05:20 for stutils by
+    <li class="footer">Generated on Fri Jun 26 2015 11:50:23 for stutils by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
