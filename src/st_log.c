@@ -133,7 +133,11 @@ int st_log_open(st_log_opt_t *log_opt)
             g_normal_fp = stdout;
         }
 
-        snprintf(wf_file, 2048, "%s.wf", log_opt->file);
+        if (strcmp(log_opt->file, "/dev/null") == 0) {
+            snprintf(wf_file, 2048, "%s", log_opt->file);
+        } else {
+            snprintf(wf_file, 2048, "%s.wf", log_opt->file);
+        }
         g_wf_fp = st_open_file(wf_file, "a");
         if (g_wf_fp == NULL) {
             fprintf(stderr, "Failed to open wf log file[%s]\n", wf_file);
