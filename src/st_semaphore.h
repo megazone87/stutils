@@ -80,6 +80,15 @@ int st_sem_wait(st_sem_t *sem);
  */
 int st_sem_post(st_sem_t *sem);
 
+/**
+ * get the value of a semaphore
+ * @ingroup semaphore
+ * @param[in] sem the semaphore.
+ * @param[out] val value of the semaphore.
+ * @return non-zero value if any error.
+ */
+int st_sem_getvalue(st_sem_t *sem, int *val);
+
 #ifdef __cplusplus
 }
 #endif

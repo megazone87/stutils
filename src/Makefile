@@ -86,5 +86,7 @@ $(TARGET_TEST_BIN) : $(BINDIR)/%-test: $(addprefix $(BIN_OBJ)/, %-test.o) $(TARG
 test: preparedir $(TARGET_TEST_BIN)
 	@result=0; for x in $(TARGET_TEST_BIN); do printf "Running $$x ..."; ./$$x >/dev/null 2>&1; if [ $$? -ne 0 ]; then echo "... FAIL $$x"; result=1; else echo "... SUCCESS";  fi;  done; exit $$result
 
-doc: 
+gen-doc:
 	doxygen doc/Doxyfile
+	cd html && git add * && git commit -a -m"generate doc on $(shell date)" && git push origin gh-pages
+

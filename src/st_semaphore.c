@@ -88,3 +88,9 @@ int st_sem_post(st_sem_t *sem)
     return 0;
 }
 
+int st_sem_getvalue(st_sem_t *sem, int *val)
+{
+    *val = sem->value;
+
+    return 0;
+}
