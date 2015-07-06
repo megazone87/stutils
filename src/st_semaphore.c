@@ -43,16 +43,12 @@ int st_sem_init(st_sem_t *sem, int init_value)
 
 int st_sem_destroy(st_sem_t *sem)
 {
-    if (pthread_mutex_destroy(&sem->mutex) != 0) {
-        ST_WARNING("Cannot destroy pthread mutex");
-        return -1;
-    }
-    if (pthread_cond_destroy(&sem->cond) != 0) {
-        ST_WARNING("Cannot destroy pthread conditional variable");
-        return -1;
-    }
+    int ret = 0;
 
-    return 0;
+    ret |= pthread_mutex_destroy(&sem->mutex);
+    ret |= pthread_cond_destroy(&sem->cond);
+
+    return ret;
 }
 
 int st_sem_wait(st_sem_t *sem)
