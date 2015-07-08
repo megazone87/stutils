@@ -48,8 +48,8 @@ static char *st_time(char *t_ime)
     time(&tt);
     localtime_r(&tt, &vtm);
     vtm.tm_year += 1900;
-    sprintf(t_ime, "%02d-%02d %02d:%02d:%02d", vtm.tm_mon+1, 
-            vtm.tm_mday, vtm.tm_hour, vtm.tm_min, vtm.tm_sec);
+    sprintf(t_ime, "%04d-%02d-%02d %02d:%02d:%02d", vtm.tm_year,
+            vtm.tm_mon+1, vtm.tm_mday, vtm.tm_hour, vtm.tm_min, vtm.tm_sec);
 
     return  t_ime;
 }
@@ -59,7 +59,7 @@ static int st_log_write_ex(FILE *fp, const char *fmt, va_list args)
     char now[20];
 
     st_time(now);
-    fprintf(fp, "%s: ", now);
+    fprintf(fp, "(%s) ", now);
 
     vfprintf(fp, fmt, args);
     fprintf(fp, "\n");
@@ -146,8 +146,8 @@ int st_log_open(st_log_opt_t *log_opt)
     }
 
     st_time(now);
-    fprintf(g_normal_fp, "%s: ========= OPEN LOG =========\n", now);
-    fprintf(g_wf_fp, "%s: ========= OPEN LOG WF =========\n", now);
+    fprintf(g_normal_fp, "(%s) ========= OPEN LOG =========\n", now);
+    fprintf(g_wf_fp, "(%s) ========= OPEN LOG WF =========\n", now);
 
     fflush(g_normal_fp);
     fflush(g_wf_fp);
@@ -265,14 +265,14 @@ int st_log_close(int iserr)
     st_time(now);
 
     if(iserr) {
-        fprintf(g_normal_fp, "%s: " 
+        fprintf(g_normal_fp, "(%s) "
                 "========= < ! > Abnormally End =========\n", now);
-        fprintf(g_wf_fp, "%s: " 
+        fprintf(g_wf_fp, "(%s) "
                 "========= < ! > Abnormally End =========\n", now);
     } else {
-        fprintf(g_normal_fp, "%s: " 
+        fprintf(g_normal_fp, "(%s) "
                 "========= < - > Normally End =========\n", now);
-        fprintf(g_wf_fp, "%s: " 
+        fprintf(g_wf_fp, "(%s) "
                 "========= < - > Normally End =========\n", now);
     }
 
