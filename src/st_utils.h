@@ -67,6 +67,7 @@ uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
 /* The largest number rand will return (same as INT_MAX).  */
 #define ST_RAND_MAX        2147483647
 int st_rand();
+double st_random(double min, double max);
 int st_rand_r(unsigned int *seed);
 void st_srand(unsigned int seed);
 

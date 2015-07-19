@@ -363,6 +363,11 @@ void st_srand(unsigned int seed)
     st_rand_state = seed;
 }
 
+double st_random(double min, double max)
+{
+    return st_rand() / (double) ST_RAND_MAX *(max - min) + min;
+}
+
 void st_shuffle(int *a, size_t n)
 {
     size_t i;
