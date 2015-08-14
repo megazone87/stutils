@@ -38,6 +38,7 @@ int st_sem_init(st_sem_t *sem, int init_value)
         return -1;
     }
 
+    sem->inited = true;
     return 0;
 }
 
@@ -45,8 +46,14 @@ int st_sem_destroy(st_sem_t *sem)
 {
     int ret = 0;
 
+    if (!sem->inited) {
+        return 0;
+    }
+
     ret |= pthread_mutex_destroy(&sem->mutex);
     ret |= pthread_cond_destroy(&sem->cond);
+
+    sem->inited = false;
 
     return ret;
 }

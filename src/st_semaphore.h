@@ -43,6 +43,7 @@ extern "C" {
  */
 typedef struct _st_sem_t_ {
   int value; /**< the semaphore counter. 0 means block on st_sem_wait(). */
+  int inited; /**< indicate whether it is initialized. using to avoid double destroy. */
   
   pthread_mutex_t mutex; /**< condition variable lock. */
   pthread_cond_t cond; /**< condition variable. */
@@ -57,6 +58,7 @@ typedef struct _st_sem_t_ {
  * @return non-zero value if any error.
  */
 int st_sem_init(st_sem_t *sem, int init_value);
+
 /**
  * Destroy a semaphore
  * @ingroup semaphore
