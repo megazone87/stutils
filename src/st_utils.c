@@ -74,21 +74,10 @@ void remove_leading_space(char *line)
 
     ST_CHECK_PARAM_VOID(line == NULL);
 
-    pstr = strrchr(line, '\r');
-    if(pstr != NULL)
-    {
-        *pstr = 0;
-    }
-    pstr = strrchr(line, '\n');
-    if(pstr != NULL)
-    {
-        *pstr = 0;
-    }
-
     pstr = line;
     while(*pstr != '\0' && (*pstr == ' ' || *pstr == '\t')) {
         ++pstr;
-    }   
+    }
 
     if (pstr != line) {
         p = line;
@@ -98,6 +87,26 @@ void remove_leading_space(char *line)
             pstr++;
         } 
         *p = '\0';
+    }
+}
+ 
+void trim(char *line)
+{
+    char *pstr = NULL;
+
+    ST_CHECK_PARAM_VOID(line == NULL);
+
+    remove_newline(line);
+    remove_leading_space(line);
+
+    pstr = line + strlen(line) - 1;
+    while(pstr >= line && (*pstr == ' ' || *pstr == '\t')) {
+        --pstr;
+    }
+
+    pstr++;
+    if (pstr >= line) {
+        *pstr = '\0';
     }
 }
  

@@ -42,6 +42,8 @@ void remove_newline(char *line);
 
 void remove_leading_space(char *line);
 
+void trim(char *line);
+
 int split_line(const char *line, char fields[][MAX_LINE_LEN], 
         int max_field, const char *sep);
 
