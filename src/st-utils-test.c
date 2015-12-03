@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include <string.h>
+
 #include "st_utils.h"
 
 int ref[24][4] = {
@@ -84,21 +86,142 @@ static int unit_test_permutation()
     int j;
 
     fprintf(stderr, "  Testing permutation...\n");
-    fprintf(stderr, "    Case %d...\n", ncase++);
+    fprintf(stderr, "    Case %d...", ncase++);
     num_res = 0;
     if (st_permutation((void *)A, n, sizeof(A[0]), save_int, NULL) < 0) {
+        fprintf(stderr, "Failed.\n");
         return -1;
     }
 
     for (i = 0; i < 24; i++) {
         for (j = 0; j < 4; j++) {
             if (res[i][j] != ref[i][j]) {
+                fprintf(stderr, "Failed.\n");
                 return -1;
             }
         }
     }
+    fprintf(stderr, "Passed.\n");
 
     return 0;
+}
+
+static int check_tok(const char *line, const char *sep,
+        const char *str, int n, int field_len)
+{
+    char buf[MAX_LINE_LEN];
+    char *word, *brk;
+    int i;
+
+    strcpy(buf, line);
+    for (word = strtok_r(buf, sep, &brk), i = 0;
+         word && i < n;
+         word = strtok_r(NULL, sep, &brk), i++) {
+        if (strcmp(word, str + i*field_len) != 0) {
+            fprintf(stderr, "token[%d] not match. [%s/%s]\n",
+                    i, word, str + i*field_len);
+            return -1;
+        }
+    }
+    if (i != n || word != NULL) {
+        fprintf(stderr, "Size not match.\n");
+        return -1;
+    }
+
+    return 0;
+}
+
+static int unit_test_string()
+{
+    char line[MAX_LINE_LEN];
+    char sep[MAX_LINE_LEN];
+    char *str = NULL;
+    int n_field = 4;
+    int field_len = 5;
+
+    int ncase = 0;
+
+    int n;
+
+    str = malloc(n_field * field_len);
+    if(str == NULL) {
+        goto ERR;
+    }
+
+    fprintf(stderr, "  Testing permutation...\n");
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "fooba haha");
+    strcpy(sep, " ");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n >= 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "foo bar\tha\ti ha");
+    strcpy(sep, " \t");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n >= 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, " \t \t");
+    strcpy(sep, " \t");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n != 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "f=oo =bar");
+    strcpy(sep, " \t=");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    if (check_tok(line, sep, str, n, field_len) < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, " f=oo =bar\t");
+    strcpy(sep, " \t=");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    if (check_tok(line, sep, str, n, field_len) < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+    safe_free(str);
+    return 0;
+
+ERR:
+    safe_free(str);
+    return -1;
 }
 
 static int run_all_tests()
@@ -106,6 +229,10 @@ static int run_all_tests()
     int ret = 0;
 
     if (unit_test_permutation() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_string() != 0) {
         ret = -1;
     }
 

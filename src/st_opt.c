@@ -335,8 +335,8 @@ void st_opt_show_usage(st_opt_t *opt, FILE *fp)
 /* Returns 1 if argument consumed, 0 if all done, -1 on error. */
 int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
 {
-    char key_value[2][MAX_LINE_LEN];
-    char sec_key[2][MAX_LINE_LEN];
+    char key_value[2*MAX_LINE_LEN];
+    char sec_key[2*MAX_LINE_LEN];
 
     st_conf_section_t *sec;
 	unsigned arg;
@@ -359,37 +359,38 @@ int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
 		return 0;
 	}
 
-    num_kv = split_line(argv[arg] + 2, key_value, 2, "=");
+    num_kv = split_line(argv[arg] + 2, key_value, 2, MAX_LINE_LEN, "=");
     if (num_kv != 1 && num_kv != 2) {
         ST_WARNING("Failed error option[%s]", argv[arg]);
         return -1;
     }
     if (num_kv == 1) {
-        if (strcasecmp(key_value[0], "help") == 0) {
-            strcpy(key_value[1], "true");
+        if (strcasecmp(key_value, "help") == 0) {
+            strcpy(key_value + MAX_LINE_LEN, "true");
         } else {
             ST_WARNING("Error Format(--key=value): [%s]", argv[arg]);
             return -1;
         }
     }
 
-    num_sk = split_line(key_value[0], sec_key, 2, "^");
+    num_sk = split_line(key_value, sec_key, 2, MAX_LINE_LEN, "^");
     if (num_sk != 1 && num_sk != 2) {
         ST_WARNING("Failed error option[%s]", argv[arg]);
         return -1;
     }
 
     if (num_sk == 2) {
-        sec = st_conf_new_sec(opt->cmd_conf, sec_key[0]);
+        sec = st_conf_new_sec(opt->cmd_conf, sec_key);
         if (sec == NULL) {
             ST_WARNING("Failed to st_conf_new_sec.");
             return -1;
         }
 
-        st_opt_normalize_key(sec_key[1], false);
-        if (st_conf_add_param(sec, sec_key[1], key_value[1]) < 0) {
-            ST_WARNING("Failed to st_conf_add_param. key[%s], value[$s]",
-                    sec_key[1], key_value[1]);
+        st_opt_normalize_key(sec_key + MAX_LINE_LEN, false);
+        if (st_conf_add_param(sec, sec_key + MAX_LINE_LEN,
+                    key_value + MAX_LINE_LEN) < 0) {
+            ST_WARNING("Failed to st_conf_add_param. key[%s], value[%s]",
+                    sec_key + MAX_LINE_LEN, key_value + MAX_LINE_LEN);
             return -1;
         }
     } else {
@@ -399,10 +400,11 @@ int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
             return -1;
         }
 
-        st_opt_normalize_key(sec_key[0], false);
-        if (st_conf_add_param(sec, sec_key[0], key_value[1]) < 0) {
-            ST_WARNING("Failed to st_conf_add_param. key[%s], value[$s]",
-                    sec_key[0], key_value[1]);
+        st_opt_normalize_key(sec_key, false);
+        if (st_conf_add_param(sec, sec_key,
+                    key_value + MAX_LINE_LEN) < 0) {
+            ST_WARNING("Failed to st_conf_add_param. key[%s], value[%s]",
+                    sec_key, key_value + MAX_LINE_LEN);
             return -1;
         }
     }

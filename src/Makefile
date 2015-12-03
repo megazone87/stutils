@@ -7,7 +7,7 @@ CFLAGS += -DNDEBUG
 #CFLAGS += -pg
 #LDFLAGS += -pg
 
-BINDIR = ../bin
+BINDIR = ./bin_obj
 BIN_OBJ = ./bin_obj
 OUTLIBDIR = ../lib
 OUTINCDIR = ../include/stutils

@@ -110,34 +110,67 @@ void trim(char *line)
     }
 }
  
-int split_line(const char *line, char fields[][MAX_LINE_LEN], 
-        int max_field, const char *sep)
+int split_line(const char *line, char *fields, 
+        int n_field, int field_len, const char *seps)
 {
-    char *pstr;
-    int i = 0;
+    const char *p;
+    const char *q;
+    int f;
+    int i;
+    bool split;
 
     ST_CHECK_PARAM(fields == NULL || line == NULL, -1);
 
-    pstr = strtok((char *)line, sep);
-    if(NULL == pstr)
-    {
-        strncpy(fields[0], line, MAX_LINE_LEN);
-        return 1;
-    }
-    strncpy(fields[i++], pstr, MAX_LINE_LEN);
+    p = line;
+    f = 0;
+    i = 0;
+    while (*p != '\0') {
+        split = false;
+        while (*p != '\0') {
+            q = seps;
+            while (*q != '\0') {
+                if (*p == *q) {
+                    split = true;
+                    break;
+                }
+                q++;
+            }
+            if (*q == '\0') { /* not meet seps */
+                break;
+            }
+            p++;
+        }
 
-    while((pstr = strtok(NULL, sep)) != NULL && i < max_field)
-    {
-        strncpy(fields[i++], pstr, MAX_LINE_LEN);
+        if (*p == '\0') {
+            break;
+        }
+
+        if (split && i > 0) {
+            fields[f * field_len + i] = '\0';
+            if (f >= n_field - 1) {
+                ST_WARNING("Too many fields. [%s]", line);
+                return -1;
+            }
+            f++;
+            i = 0;
+        }
+
+        if (i >= field_len - 1) {
+            ST_WARNING("Too long field. [%s]", p - i);
+            return -1;
+        }
+        fields[f * field_len + i] = *p;
+        i++;
+
+        p++;
     }
 
-    if(pstr)
-    {
-        ST_WARNING("Too many fields[%d/%d]", i, max_field);
-        return -1;
+    if (i > 0) {
+        fields[f * field_len + i] = '\0';
+        f++;
     }
 
-    return i;
+    return f;
 }
 
 unsigned int highest_bit_mask(unsigned int num, int overflow)

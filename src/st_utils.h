@@ -44,8 +44,8 @@ void remove_leading_space(char *line);
 
 void trim(char *line);
 
-int split_line(const char *line, char fields[][MAX_LINE_LEN], 
-        int max_field, const char *sep);
+int split_line(const char *line, char *fields, 
+        int n_field, int field_len, const char *seps);
 
 unsigned int highest_bit_mask(unsigned int num, int overflow);
 
