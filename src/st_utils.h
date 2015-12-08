@@ -60,9 +60,7 @@ typedef enum _encoding_type_t_
 
 int get_next_char(const char *token, encoding_type_t encoding);
 
-char* get_next_token(char *line, char *token);
-
-void remove_newline(char *line);
+const char* get_next_token(const char *line, char *token);
 
 uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
 

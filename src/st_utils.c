@@ -237,7 +237,7 @@ void iqsort(int *arr, int l, int u,
     iqsort(arr, j+1, u, cmp, args); 
 }
 
-char* get_next_token(char *line, char *token)
+const char* get_next_token(const char *line, char *token)
 {
     while((*line == ' ' || *line == '\t') && *line)
     {

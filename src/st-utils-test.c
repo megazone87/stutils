@@ -188,6 +188,53 @@ static int unit_test_string()
     /**********************************************/
     /**********************************************/
     fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "foo");
+    strcpy(sep, " \t");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    if (check_tok(line, sep, str, n, field_len) < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "foo   \t  ");
+    strcpy(sep, " \t");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    if (check_tok(line, sep, str, n, field_len) < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "fo b");
+    strcpy(sep, "");
+    n = split_line(line, str, n_field, field_len, sep);
+    if (n < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    if (check_tok(line, sep, str, n, field_len) < 0) {
+        fprintf(stderr, "Failed.\n");
+        goto ERR;
+    }
+    fprintf(stderr, "Passed.\n");
+    /**********************************************/
+    /**********************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
     strcpy(line, "f=oo =bar");
     strcpy(sep, " \t=");
     n = split_line(line, str, n_field, field_len, sep);
