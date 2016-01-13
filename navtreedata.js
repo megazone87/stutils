@@ -5,8 +5,8 @@ var NAVTREE =
       [ "What is stutils?", "about.html#about_what", null ]
     ] ],
     [ "Modules", "modules.html", "modules" ],
-    [ "Data Structures", null, [
-      [ "Data Structures", "annotated.html", "annotated" ],
+    [ "Data Structures", "annotated.html", [
+      [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
       [ "Data Fields", "functions.html", [
         [ "All", "functions.html", null ],

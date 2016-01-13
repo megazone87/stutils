@@ -1,4 +1,4 @@
-var annotated =
+var annotated_dup =
 [
     [ "st_alphabet_t", "structst__alphabet__t.html", "structst__alphabet__t" ],
     [ "st_conf_param_t", "structst__conf__param__t.html", "structst__conf__param__t" ],
