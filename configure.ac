@@ -9,13 +9,26 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror -Wno-portability foreign])
 
 AM_PROG_AR
 LT_INIT
 
+DX_INIT_DOXYGEN(stutils, src/doc/Doxyfile, doc)
+    DX_DOXYGEN_FEATURE(ON)
+    DX_DOT_FEATURE(OFF)
+    DX_HTML_FEATURE(ON)
+    DX_CHM_FEATURE(OFF)
+    DX_CHI_FEATURE(OFF)
+    DX_MAN_FEATURE(OFF)
+    DX_RTF_FEATURE(OFF)
+    DX_XML_FEATURE(OFF)
+    DX_PDF_FEATURE(OFF)
+    DX_PS_FEATURE(OFF)
+
 # Checks for programs.
 AC_PROG_CC
+AX_PROG_SPLINT
 
 # Checks for libraries.
 
