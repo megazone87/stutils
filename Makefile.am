@@ -1,4 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
+AM_CFLAGS = -I$(top_srcdir)/src
+AM_CFLAGS += -m64 -pipe
 
 include aminclude_static.am
 include aminclude.am
@@ -32,8 +34,6 @@ libstutils_la_SOURCES = src/st_dict.c \
        src/st_semaphore.c
 libstutils_la_LIBADD = -lm
 
-AM_CFLAGS = -m64 -pipe
-
 check_PROGRAMS = src/tests/st-utils-test
 src_tests_st_utils_test_SOURCES = src/tests/st-utils-test.c
 src_tests_st_utils_test_LDADD = libstutils.la
@@ -41,3 +41,14 @@ src_tests_st_utils_test_LDADD = libstutils.la
 TESTS = $(check_PROGRAMS)
 
 EXTRA_DIST = LICENSE README.md doc/html
+
+publish-doc: doxygen-run
+	if [ ! -d .downloads/stutils-doc ]; then \
+      git clone -b gh-pages git@github.com:wantee/stutils.git .downloads/stutils-doc; \
+    fi
+	rm -rf .downloads/stutils-doc/* && \
+	cp -r doc/html/* .downloads/stutils-doc/ && \
+	cd .downloads/stutils-doc/ && \
+	git add * && \
+	git commit -a -m"generate doc on $(shell date)" && \
+	git push origin gh-pages

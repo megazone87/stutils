@@ -7,7 +7,6 @@ bin/
 include/
 lib/
 third-party/
-tests/
 log/
 *.o
 *.wav
@@ -58,7 +57,7 @@ config.h
 *.lo
 *.la
 *.trs
-src/st-utils-test
+st-utils-test
 .downloads
 aminclude_static.am
 .dirstamp

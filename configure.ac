@@ -46,7 +46,6 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([bzero gethostbyname gettimeofday localtime_r memmove memset mkdir socket sqrt strcasecmp strchr strerror strncasecmp strpbrk strrchr])
 
-AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+AC_CONFIG_FILES([Makefile])
 
 AC_OUTPUT

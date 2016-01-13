@@ -37,6 +37,7 @@ while true; do
         fi
         add=3; shift ;;
     -s) add=-1; break ;;
+    -g) debug=1; break ;;
     -h) echo "Usage: $0 [-x major] [-y minor] [-z patch] [+x|+y|+z] [-s | -h ]" >&2
         exit 0;;
     -*) echo "$0: Unrecognized option $1" >&2
@@ -103,6 +104,18 @@ make > /dev/null || exit 1
 make check > /dev/null || exit 1
 ) || exit 1
 
+echo "Updating Doc..."
+awk -v major=$major -v minor=$minor -v patch=$patch \
+    '{gsub(/stutils\(v[0-9]+\.[0-9]+\.[0-9]+/, \
+           "stutils(v"major"."minor"."patch); \
+      print $0; \
+     }' src/doc/mainpage.dox > /tmp/mainpage.dox.$$
+mv /tmp/mainpage.dox.$$ src/doc/mainpage.dox
+(
+set -x
+make doxygen-run > /dev/null || exit 1
+) || exit 1
+
 echo "Updating README..."
 awk -v major=$major -v minor=$minor -v patch=$patch \
     '{if ($1 == "#") {\
@@ -124,11 +137,18 @@ make dist > /dev/null || exit 1
 make distcheck > /dev/null || exit 1
 ) || exit 1
 
+if [ -n "$debug" ]; then
+  exit
+fi
+
 echo "Tagging repo..."
 git commit -am"version bump" || exit 1
 git tag "v$major.$minor.$patch" || exit 1
 git push || exit 1
 git push --tags || exit 1
+
+echo "Publishing doc..."
+make publish-doc > /dev/null || exit 1
 
 echo "Releasing on github..."
 github-release release \
