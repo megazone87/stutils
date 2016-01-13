@@ -20,7 +20,7 @@ $ git clone https://github.com/wantee/stutils.git
 $ cd stutils
 $ ./autogen.sh
 $ configure --prefix=$YOUR_INSTALL_PATH
-$ make
+$ make -j 4
 $ make check
 $ make install
 ```
@@ -28,10 +28,10 @@ $ make install
 ### From tarball
  
 ```shell
-$ curl -sL clone https://github.com/wantee/stutils/archive/stutils-0.0.0.tar.gz
+$ curl -sL https://github.com/wantee/stutils/releases/download/v0.0.0/stutils-0.0.0.tar.gz | tar xz
 $ cd stutils-0.0.0
 $ configure --prefix=$YOUR_INSTALL_PATH
-$ make
+$ make -j 4
 $ make check
 $ make install
 ```

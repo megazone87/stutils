@@ -25,6 +25,7 @@ libstutils_la_SOURCES = st_dict.c \
        st_io.c \
        st_opt.c \
        st_semaphore.c
+libstutils_la_LIBADD = -lm
 
 AM_CFLAGS = -m64 -pipe
 

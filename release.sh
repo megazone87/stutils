@@ -112,6 +112,8 @@ awk -v major=$major -v minor=$minor -v patch=$patch \
       } else if ($1 == "$") { \
         gsub(/stutils-[0-9]+\.[0-9]+\.[0-9]+/, \
              "stutils-"major"."minor"."patch); \
+        gsub(/releases\/download\/v[0-9]+.[0-9]+.[0-9]+\//, \
+             "releases/download/v"major"."minor"."patch"/");
       } \
       print $0; \
      }' README.md > /tmp/README.md.$$
@@ -123,6 +125,23 @@ make distcheck > /dev/null || exit 1
 ) || exit 1
 
 echo "Tagging repo..."
-#git 
+git commit -am"version bump" || exit 1
+git tag "v$major.$minor.$patch" || exit 1
+git push || exit 1
+git push --tags || exit 1
+
+echo "Releasing on github..."
+github-release release \
+        --user wantee \
+        --repo stutils \
+        --tag v$major.$minor.$patch || exit 1
+
+github-release upload \
+        --user wantee \
+        --repo stutils \
+        --tag v$major.$minor.$patch \
+        --name "stutils-$major.$minor.$patch.tar.gz" \
+        --label "Ready-to-install tarball" \
+        --file "stutils-$major.$minor.$patch.tar.gz" || exit 1
 
 echo "Finish releasing."

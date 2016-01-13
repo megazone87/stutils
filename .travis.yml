@@ -2,10 +2,14 @@ language: c
 compiler:
   - clang
   - gcc
+before_install:
+  - sudo add-apt-repository ppa:dns/gnu -y
+  - sudo apt-get update -q
+  - sudo apt-get install --only-upgrade autoconf
 install:
-  - make -C src
+  - ./autogen.sh
 script: 
-  - make -C src test
+  - ./configure && make && make check
 notifications:
   email:
     on_success: always
