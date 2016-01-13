@@ -33,6 +33,10 @@ extern "C" {
 #include <strings.h>
 #include <sys/time.h>
 
+#define ST_VERSION_MAJOR "0"
+#define ST_VERSION_MINOR "0"
+#define ST_VERSION_PATCH "0"
+
 #define MAX_LINE_LEN        4096
 #define MAX_DIR_LEN         256
 #define MAX_NAME_LEN        64

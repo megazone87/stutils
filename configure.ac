@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(stutils, 0.0.1, wantee.wang@gmail.com)
+AC_INIT(stutils, 0.0.0, wantee.wang@gmail.com)
 
 AC_CONFIG_SRCDIR([src/st_macro.h])
 AC_CONFIG_HEADERS([src/config.h])

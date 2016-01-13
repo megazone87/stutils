@@ -34,6 +34,8 @@ extern "C" {
 
 #include "st_macro.h"
 
+const char *st_version();
+
 long make_long(unsigned int a, unsigned int b);
 
 void split_long(long l, unsigned int *a, unsigned int *b);
