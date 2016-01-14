@@ -1,4 +1,4 @@
-# stutils (v0.0.0)
+# stutils (v0.0.1)
 A Utils C Library.
 
 [![Build Status](https://travis-ci.org/wantee/stutils.svg)](https://travis-ci.org/wantee/stutils)
@@ -28,8 +28,8 @@ $ make install
 ### From tarball
  
 ```shell
-$ curl -sL https://github.com/wantee/stutils/releases/download/v0.0.0/stutils-0.0.0.tar.gz | tar xz
-$ cd stutils-0.0.0
+$ curl -sL https://github.com/wantee/stutils/releases/download/v0.0.1/stutils-0.0.1.tar.gz | tar xz
+$ cd stutils-0.0.1
 $ configure --prefix=$YOUR_INSTALL_PATH
 $ make -j 4
 $ make check

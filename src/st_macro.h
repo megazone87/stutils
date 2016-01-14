@@ -35,7 +35,7 @@ extern "C" {
 
 #define ST_VERSION_MAJOR "0"
 #define ST_VERSION_MINOR "0"
-#define ST_VERSION_PATCH "0"
+#define ST_VERSION_PATCH "1"
 
 #define MAX_LINE_LEN        4096
 #define MAX_DIR_LEN         256
