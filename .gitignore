@@ -44,7 +44,9 @@ depcomp
 install-sh
 missing
 stamp-h1
-m4/
+m4/*
+!m4/ax_prog_splint_recursive.m4
+!m4/ax_prog_doxygen_add.m4
 build-aux/
 
 libtool

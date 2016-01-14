@@ -51,6 +51,7 @@ if [ "$add" -eq 0 ]; then # default to add patch
 fi
 
 cur_version=`grep AC_INIT configure.ac | awk -F',' '{print $2}'`
+cur_version=`echo $cur_version | awk -F'[][]' '{print $2}'`
 cur_major=`echo $cur_version | awk -F'.' '{print $1}'`
 cur_minor=`echo $cur_version | awk -F'.' '{print $2}'`
 cur_patch=`echo $cur_version | awk -F'.' '{print $3}'`
@@ -73,7 +74,7 @@ echo "Releasing version: $major.$minor.$patch..."
 echo "Updating configure..."
 awk -v major=$major -v minor=$minor -v patch=$patch \
     '{if ($1 ~ /^AC_INIT/) { \
-        $2 = major"."minor"."patch","; \
+        $2 = "["major"."minor"."patch"],"; \
       } \
       print $0; \
      }' configure.ac > /tmp/configure.ac.$$ || exit 1
@@ -138,6 +139,7 @@ make distcheck > /dev/null || exit 1
 ) || exit 1
 
 if [ -n "$debug" ]; then
+  echo "Finish releasing(debug)."
   exit
 fi
 
