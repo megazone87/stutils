@@ -37,7 +37,7 @@ while true; do
         fi
         add=3; shift ;;
     -s) add=-1; break ;;
-    -g) debug=1; break ;;
+    -g) shift; debug=1 ;;
     -h) echo "Usage: $0 [-x major] [-y minor] [-z patch] [+x|+y|+z] [-s | -h ]" >&2
         exit 0;;
     -*) echo "$0: Unrecognized option $1" >&2
@@ -70,7 +70,6 @@ minor=${minor:-$cur_minor}
 patch=${patch:-$cur_patch}
 
 echo "Releasing version: $major.$minor.$patch..."
-
 echo "Updating configure..."
 awk -v major=$major -v minor=$minor -v patch=$patch \
     '{if ($1 ~ /^AC_INIT/) { \

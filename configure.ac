@@ -11,7 +11,6 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror -Wno-portability foreign])
-AM_EXTRA_RECURSIVE_TARGETS([splint-check])
 
 AM_PROG_AR
 LT_INIT
@@ -31,6 +30,9 @@ DX_INIT_DOXYGEN_ADD(stutils, src/doc/Doxyfile, doc)
 # Checks for programs.
 AC_PROG_CC
 AX_PROG_SPLINT_RECURSIVE
+AM_EXTRA_RECURSIVE_TARGETS([splint-check])
+AX_VALGRIND_CHECK_RECURSIVE
+AM_EXTRA_RECURSIVE_TARGETS([check-valgrind])
 
 # Checks for libraries.
 

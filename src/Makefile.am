@@ -34,3 +34,5 @@ tests_st_utils_test_LDADD = libstutils.la
 TESTS = $(check_PROGRAMS)
 
 include $(top_srcdir)/aminclude_static.am
+
+@VALGRIND_CHECK_RULES_LOCAL@
