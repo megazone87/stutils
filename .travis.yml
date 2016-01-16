@@ -5,7 +5,7 @@ compiler:
 before_install:
   - sudo add-apt-repository ppa:dns/gnu -y
   - sudo apt-get update -q
-  - sudo apt-get install --only-upgrade autoconf automake libtool
+  - sudo apt-get install --only-upgrade autoconf automake glibtool
 install:
   - ./autogen.sh
 script: 
