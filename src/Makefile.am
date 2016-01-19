@@ -36,3 +36,11 @@ TESTS = $(check_PROGRAMS)
 include $(top_srcdir)/aminclude_static.am
 
 @VALGRIND_CHECK_RULES_LOCAL@
+
+.PHONY: check-git-commit
+
+all: check-git-commit
+
+check-git-commit:
+	@if grep '^#define ST_GIT_COMMIT' st_macro.h | awk '{if($$3 ~ /[0-9a-f]{40}/){exit 1} else {exit 0}}'; then \
+	echo "No commit version set. Do you forget to include .gitconfig in your local config."; exit 1; fi

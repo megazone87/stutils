@@ -37,6 +37,8 @@ extern "C" {
 #define ST_VERSION_MINOR "0"
 #define ST_VERSION_PATCH "1"
 
+#define ST_GIT_COMMIT "07e194403f78e9135c5af03645d09f51444c52b9"
+
 #define MAX_LINE_LEN        4096
 #define MAX_DIR_LEN         256
 #define MAX_NAME_LEN        64
