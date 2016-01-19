@@ -12,31 +12,20 @@ A Utils Library.
 * Dict and Alphabet
 * Semaphore
 
-## Usage
-First, Build the library,
- 
+## Build
 ```shell
 $ git clone https://github.com/wantee/stutils.git
 $ cd stutils/src
 $ make
 ```
+## Contributing
 
-Then, set the proper environment variables,
-
-```shell
-$ export C_INCLUDE_PATH=$PATH_TO_STUTILS/include/stutils/:$C_INCLUDE_PATH
-$ export CPLUS_INCLUDE_PATH=$PATH_TO_STUTILS/include/stutils/:$CPLUS_INCLUDE_PATH
-$ export LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$LIBRARY_PATH
-$ export LD_LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$LD_LIBRARY_PATH
-```
-
-For Mac OSX, the last line should be
-
-```
-$ export DYLD_LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$DYLD_LIBRARY_PATH
-```
+1. Fork it ( https://github.com/wantee/stutils.git )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
 
 ## License
 
 **stutils** is open source software licensed under the MIT License. See the `LICENSE` file for more information.
-
