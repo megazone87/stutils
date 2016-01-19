@@ -14,7 +14,7 @@ before_install:
   - ./configure --prefix /usr/local
   - sudo make install
   - wget http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz
-  - tar xf libtool-2.4.6
+  - tar xf libtool-2.4.6.tar.gz
   - cd libtool-2.4.6
   - ./configure --prefix /usr/local
   - sudo make install 
