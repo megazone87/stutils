@@ -6,7 +6,7 @@
 
 ### Checking GNU Autotools ############################################
 AC_VER=2.69
-AM_VER=1.14
+AM_VER=1.15
 LT_VER=2.4.6
 
 if [ `uname` == 'Darwin' ]; then
