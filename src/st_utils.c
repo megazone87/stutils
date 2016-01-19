@@ -34,11 +34,6 @@
 #include "st_log.h"
 #include "st_utils.h"
 
-const char *st_version()
-{
-    return ST_VERSION_MAJOR"."ST_VERSION_MINOR"."ST_VERSION_PATCH;
-}
-
 static long mask = ((((long)1) << 32) - 1);
 
 long make_long(unsigned int a, unsigned int b)

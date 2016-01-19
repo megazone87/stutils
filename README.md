@@ -1,5 +1,5 @@
-# stutils (v0.0.1)
-A Utils C Library.
+# stutils
+A Utils Library.
 
 [![Build Status](https://travis-ci.org/wantee/stutils.svg)](https://travis-ci.org/wantee/stutils)
 [![License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/wantee/stutils/blob/master/LICENSE)
@@ -12,28 +12,28 @@ A Utils C Library.
 * Dict and Alphabet
 * Semaphore
 
-## Build
-### From git repo
+## Usage
+First, Build the library,
  
 ```shell
 $ git clone https://github.com/wantee/stutils.git
-$ cd stutils
-$ ./autogen.sh
-$ configure --prefix=$YOUR_INSTALL_PATH
-$ make -j 4
-$ make check
-$ make install
+$ cd stutils/src
+$ make
 ```
 
-### From tarball
- 
+Then, set the proper environment variables,
+
 ```shell
-$ curl -sL https://github.com/wantee/stutils/releases/download/v0.0.1/stutils-0.0.1.tar.gz | tar xz
-$ cd stutils-0.0.1
-$ configure --prefix=$YOUR_INSTALL_PATH
-$ make -j 4
-$ make check
-$ make install
+$ export C_INCLUDE_PATH=$PATH_TO_STUTILS/include/stutils/:$C_INCLUDE_PATH
+$ export CPLUS_INCLUDE_PATH=$PATH_TO_STUTILS/include/stutils/:$CPLUS_INCLUDE_PATH
+$ export LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$LIBRARY_PATH
+$ export LD_LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$LD_LIBRARY_PATH
+```
+
+For Mac OSX, the last line should be
+
+```
+$ export DYLD_LIBRARY_PATH=$PATH_TO_STUTILS/stutils/lib/:$DYLD_LIBRARY_PATH
 ```
 
 ## License
