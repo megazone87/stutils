@@ -72,4 +72,3 @@ void st_queue_destroy(st_queue_t* queue);
 #endif
 
 #endif
-

@@ -244,4 +244,3 @@ int st_opt_get_bool(st_opt_t *popt, const char *sec_name,
 #endif
 
 #endif
-

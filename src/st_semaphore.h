@@ -96,4 +96,3 @@ int st_sem_getvalue(st_sem_t *sem, int *val);
 #endif
 
 #endif
-

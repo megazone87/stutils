@@ -391,4 +391,3 @@ int st_conf_get_bool_def(st_conf_t *pconf, const char *sec_name,
 #endif
 
 #endif
-

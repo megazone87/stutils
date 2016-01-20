@@ -590,4 +590,3 @@ ERR:
     safe_st_alphabet_destroy(alphabet);
     return NULL;
 }
-

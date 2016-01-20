@@ -130,4 +130,3 @@ int st_stack_topn(st_stack_t* st_stack, st_stack_id_t n, void** obj)
     
     return ST_STACK_OK;
 }
-

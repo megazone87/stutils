@@ -1039,4 +1039,3 @@ int st_permutation(void *base, size_t n, size_t sz,
 {
     return st_allrange(base, 0, n, sz, callback, args);
 }
-

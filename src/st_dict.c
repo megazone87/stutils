@@ -744,4 +744,3 @@ ERR:
     safe_st_dict_destroy(dict);
     return NULL;
 }
-

@@ -111,4 +111,3 @@ void st_queue_destroy(st_queue_t* queue)
         safe_free(queue->data_arr);
     }
 }
-

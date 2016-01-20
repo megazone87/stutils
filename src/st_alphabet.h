@@ -83,4 +83,3 @@ st_alphabet_t* st_alphabet_dup(st_alphabet_t *a);
 #endif
 
 #endif
-

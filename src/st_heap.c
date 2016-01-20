@@ -252,4 +252,3 @@ void st_heap_destroy(st_heap_t* heap)
         safe_free(heap->data_arr);
     }
 }
-

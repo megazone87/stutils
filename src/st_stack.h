@@ -73,5 +73,3 @@ int st_stack_topn(st_stack_t* st_stack, st_stack_id_t n, void** obj);
 #endif
 
 #endif
-
-/* vim: set expandtab ts=4 sw=4 sts=4 tw=100: */

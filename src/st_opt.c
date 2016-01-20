@@ -642,4 +642,3 @@ int st_opt_get_double(st_opt_t *popt, const char *sec_name,
 
     return ret;
 }
-

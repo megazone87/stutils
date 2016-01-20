@@ -89,4 +89,3 @@ test: preparedir $(TARGET_TEST_BIN)
 gen-doc:
 	doxygen doc/Doxyfile
 	cd html && git add * && git commit -a -m"generate doc on $(shell date)" && git push origin gh-pages
-
