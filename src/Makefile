@@ -125,7 +125,7 @@ val-test: inc $(TARGET_SO) $(TEST_TARGETS)
      exit $$result
 
 # complie and link tests
-$(OBJ_DIR)/%: %.c
+$(TEST_TARGETS) : $(OBJ_DIR)/%: %.c
 	@mkdir -p "$(dir $@)"
 	$(GCC) $(CFLAGS) -UNDEBUG -o $@ $< -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) 
 
