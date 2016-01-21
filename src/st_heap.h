@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 
 #define ST_HEAP_OK    0
 #define ST_HEAP_ERR   -1

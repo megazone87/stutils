@@ -31,7 +31,7 @@ extern "C" {
 
 #include <stdio.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 
 #define ST_DICT_REALLOC_NUM 1000000
 

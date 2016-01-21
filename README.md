@@ -16,8 +16,23 @@ A Utils Library.
 ```shell
 $ git clone https://github.com/wantee/stutils.git
 $ cd stutils/src
-$ make
+$ make -j 4
+$ make test
 ```
+
+## Usage
+1. Add include directory to CFLAGS.
+
+```
+CFLAGS += -I$(PATH_TO_STUTILS)/include
+```
+
+2. Include header(s) in your source file.
+
+```c
+#include <stutils/st_xxx.h>
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/wantee/stutils.git )

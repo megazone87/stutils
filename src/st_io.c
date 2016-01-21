@@ -24,7 +24,7 @@
 
 #include <sys/stat.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 #include "st_log.h"
 #include "st_io.h"
 

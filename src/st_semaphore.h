@@ -31,7 +31,7 @@ extern "C" {
 
 #include <pthread.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 
 /** @defgroup semaphore Semaphore
  * Data structures and functions for Semaphore.

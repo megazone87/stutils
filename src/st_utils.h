@@ -32,7 +32,9 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
+
+const char* st_version();
 
 long make_long(unsigned int a, unsigned int b);
 

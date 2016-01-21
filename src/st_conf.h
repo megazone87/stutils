@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 
 #define SEC_NUM     10
 #define PARAM_NUM    100

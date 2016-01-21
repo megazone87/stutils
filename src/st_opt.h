@@ -31,7 +31,7 @@ extern "C" {
 
 #include <stdio.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 #include "st_conf.h"
 
 typedef enum _st_opt_type_t_ {

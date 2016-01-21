@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 #include "st_opt.h"
 
 #define ST_LOG_LEV_CLEANEST     0x01

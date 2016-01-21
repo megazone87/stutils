@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 #include "st_dict.h"
 
 #define MAX_SYM_LEN         256

@@ -31,7 +31,7 @@ extern "C" {
 
 #include <stdio.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 
 FILE* st_fopen(const char *name, const char *mode);
 

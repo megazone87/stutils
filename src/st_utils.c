@@ -30,9 +30,14 @@
 #include <math.h>
 #include <sys/stat.h>
 
-#include "st_macro.h"
+#include <stutils/st_macro.h>
 #include "st_log.h"
 #include "st_utils.h"
+
+const char* st_version()
+{
+    return GIT_COMMIT;
+}
 
 static long mask = ((((long)1) << 32) - 1);
 
