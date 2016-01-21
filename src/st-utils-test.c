@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include <time.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "st_utils.h"
@@ -271,6 +273,155 @@ ERR:
     return -1;
 }
 
+static int unit_test_parse_int_array()
+{
+#define N_ARR 8
+    char line[1024];
+    char buf[8];
+    int ref[N_ARR];
+    int *a = NULL;
+    int n = 0;
+    int i;
+    int ncase;
+
+    fprintf(stderr, " Testing st_parse_int_array...\n");
+
+    srand((unsigned int)time(NULL));
+    for (i = 0; i < N_ARR; i++) {
+        ref[i] = rand() % 19 + (-9);
+#ifdef _ST_TEST_DEBUG_
+        printf("%d\n", ref[i]);
+#endif
+    }
+
+    ncase = 1;
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    line[0] = '\0';
+    for (i = 0; i < N_ARR - 1; i++) {
+        snprintf(buf, 8, "%d,", ref[i]);
+        strcat(line, buf);
+    }
+    snprintf(buf, 8, "%d", ref[i]);
+    strcat(line, buf);
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", line);
+#endif
+
+    if(st_parse_int_array(line, &a, &n) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (n != N_ARR) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    for (i = 0; i < N_ARR; i++) {
+#ifdef _ST_TEST_DEBUG_
+        printf("%d\n", a[i]);
+#endif
+        if (a[i] != ref[i]) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+    }
+    safe_free(a);
+    n = 0;
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    snprintf(line, 1024, "%d", ref[0]);
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", line);
+#endif
+
+    if(st_parse_int_array(line, &a, &n) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (n != 1) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%d\n", a[0]);
+#endif
+    if (a[0] != ref[0]) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    safe_free(a);
+    n = 0;
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "f,1,2,df,-1");
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", line);
+#endif
+
+    if(st_parse_int_array(line, &a, &n) == 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    safe_free(a);
+    n = 0;
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, ",1,2,0,-1");
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", line);
+#endif
+
+    if(st_parse_int_array(line, &a, &n) == 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    safe_free(a);
+    n = 0;
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, ",1,,2,0,-1");
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", line);
+#endif
+
+    if(st_parse_int_array(line, &a, &n) == 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    safe_free(a);
+    n = 0;
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(line, "1,-1,");
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", line);
+#endif
+
+    if(st_parse_int_array(line, &a, &n) == 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    safe_free(a);
+    n = 0;
+    fprintf(stderr, "Passed\n");
+
+    return 0;
+
+FAILED:
+    safe_free(a);
+    return -1;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -280,6 +431,10 @@ static int run_all_tests()
     }
 
     if (unit_test_string() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_parse_int_array() != 0) {
         ret = -1;
     }
 

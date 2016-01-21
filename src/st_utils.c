@@ -1039,3 +1039,70 @@ int st_permutation(void *base, size_t n, size_t sz,
 {
     return st_allrange(base, 0, n, sz, callback, args);
 }
+
+int st_parse_int_array(const char *line, int **arr, int *n_arr)
+{
+    const char *q;
+    bool neg;
+    int n;
+
+    q = line;
+    n = INT_MAX;
+    neg = false;
+
+    while (*q != 0) {
+        if (*q == ',') {
+            if (n == INT_MAX) {
+                ST_WARNING("Error array: No number found before ','");
+                return -1;
+            }
+            *arr = (int *)realloc(*arr, sizeof(int)*(*n_arr + 1));
+            if (*arr == NULL) {
+                ST_WARNING("Failed to realloc array[%d].", *n_arr);
+                return -1;
+            }
+            if (neg) {
+                n = -n;
+            }
+            (*arr)[*n_arr] = n;
+            ++(*n_arr);
+            n = INT_MAX;
+            neg = false;
+        } else {
+            if (*q == '-') {
+                if (n != INT_MAX) {
+                    ST_WARNING("Error array: found not proper '-'");
+                    return -1;
+                }
+                neg = true;
+            } else if (*q < '0' || *q > '9') {
+                ST_WARNING("Error array: found non-digit[%c]", *q);
+                return -1;
+            } else {
+                if (n == INT_MAX) {
+                    n = (*q - '0');
+                } else {
+                    n = n * 10 + (*q - '0');
+                }
+            }
+        }
+
+        ++q;
+    }
+    if (n == INT_MAX) {
+        ST_WARNING("Error array: extra ',' found in the end");
+        return -1;
+    }
+    *arr = (int *)realloc(*arr, sizeof(int)*(*n_arr + 1));
+    if (*arr == NULL) {
+        ST_WARNING("Failed to realloc array[%d].", *n_arr);
+        return -1;
+    }
+    if (neg) {
+        n = -n;
+    }
+    (*arr)[*n_arr] = n;
+    ++(*n_arr);
+
+    return 0;
+}

@@ -107,6 +107,8 @@ int st_permutation(void *base, size_t n, size_t sz,
 void st_qsort(void *const pbase, size_t total_elems, size_t size,
 	    int (*cmp) (const void *, const void *, void *), void *arg);
 
+int st_parse_int_array(const char *line, int **arr, int *n_arr);
+
 #ifdef __cplusplus
 }
 #endif
