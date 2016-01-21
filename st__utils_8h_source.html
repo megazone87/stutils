@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>stutils: src/st_utils.h Source File</title>
+<title>stutils: st_utils.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -141,9 +141,9 @@ $(document).ready(function(){initNavTree('st__utils_8h_source.html','');});
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;st_macro.h&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;stutils/st_macro.h&gt;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *st_version();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span>* st_version();</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">long</span> make_long(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> a, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> b);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
@@ -218,20 +218,21 @@ $(document).ready(function(){initNavTree('st__utils_8h_source.html','');});
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keywordtype">void</span> st_qsort(<span class="keywordtype">void</span> *<span class="keyword">const</span> pbase, <span class="keywordtype">size_t</span> total_elems, <span class="keywordtype">size_t</span> size,</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordtype">int</span> (*cmp) (<span class="keyword">const</span> <span class="keywordtype">void</span> *, <span class="keyword">const</span> <span class="keywordtype">void</span> *, <span class="keywordtype">void</span> *), <span class="keywordtype">void</span> *arg);</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;}</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">int</span> st_parse_int_array(<span class="keyword">const</span> <span class="keywordtype">char</span> *line, <span class="keywordtype">int</span> **arr, <span class="keywordtype">int</span> *n_arr);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="structst__gauss__r__t_html"><div class="ttname"><a href="structst__gauss__r__t.html">st_gauss_r_t</a></div><div class="ttdef"><b>Definition:</b> st_utils.h:88</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><b>st_utils.h</b></li>
-    <li class="footer">Generated on Thu Jan 14 2016 15:54:06 for stutils by
+    <li class="navelem"><b>st_utils.h</b></li>
+    <li class="footer">Generated on Thu Jan 21 2016 19:38:41 for stutils by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>
