@@ -58,11 +58,11 @@ all: inc $(TARGET_SO)
 
 # always check revision
 config:
-	@./replace_revision.sh $(CONFIG_INC) $(OUT_CONFIG)
+	@./replace_revision.sh $(CONFIG_INC) $(OUT_CONFIG) ST_GIT_COMMIT
 
 # copy config.h when updated
 $(OUT_CONFIG): $(CONFIG_INC)
-	./replace_revision.sh $(CONFIG_INC) $(OUT_CONFIG) 1
+	./replace_revision.sh $(CONFIG_INC) $(OUT_CONFIG) ST_GIT_COMMIT 1
 
 OUT_INCS = $(addprefix $(OUTINC_DIR)/$(PROJECT)/,$(INCS))
 

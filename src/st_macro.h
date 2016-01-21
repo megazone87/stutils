@@ -33,7 +33,7 @@ extern "C" {
 #include <strings.h>
 #include <sys/time.h>
 
-#define GIT_COMMIT "0"
+#define ST_GIT_COMMIT "0"
 
 #define MAX_LINE_LEN        4096
 #define MAX_DIR_LEN         256

@@ -36,7 +36,7 @@
 
 const char* st_version()
 {
-    return GIT_COMMIT;
+    return ST_GIT_COMMIT;
 }
 
 static long mask = ((((long)1) << 32) - 1);
