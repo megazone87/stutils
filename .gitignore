@@ -7,14 +7,12 @@ bin/
 include/
 lib/
 third-party/
-tests/
 log/
 *.o
 *.wav
 Products/
-obj/
-so_obj/
-bin_obj/
+.objs/
+.deps/
 
 # vim
 [._]*.s[a-w][a-z]
