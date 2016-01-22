@@ -23,13 +23,13 @@ $ make test
 ## Usage
 1. Add include directory to CFLAGS.
 
-```
+  ```
 CFLAGS += -I$(PATH_TO_STUTILS)/include
 ```
 
 2. Include header(s) in your source file.
 
-```c
+  ```
 #include <stutils/st_xxx.h>
 ```
 

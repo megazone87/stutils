@@ -8,7 +8,6 @@ OBJ_DIR=./.objs
 DEP_DIR=./.deps
 
 include flags.mk
-include templates.mk
 
 PROJECT = stutils
 CONFIG_INC = st_macro.h
@@ -68,7 +67,9 @@ OUT_INCS = $(addprefix $(OUTINC_DIR)/$(PROJECT)/,$(INCS))
 
 inc: $(OUT_INCS) config $(OUT_CONFIG)
 
-$(foreach f,$(INCS),$(eval $(call copy_inc,$f,$(OUTINC_DIR)/$(PROJECT)/$f)))
+$(OUT_INCS) : $(OUTINC_DIR)/$(PROJECT)/%.h : %.h
+	@mkdir -p "$(dir $@)"
+	cp "$<" "$@"
 
 $(TARGET_SO) : $(addprefix $(OBJ_DIR)/,$(OBJS))
 	@mkdir -p "$(dir $@)"
