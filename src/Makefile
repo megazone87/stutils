@@ -38,4 +38,5 @@ VAL_TESTS = tests/st-utils-test
 .PHONY: all
 all:
 
+include common_static.mk
 include common.mk

@@ -18,45 +18,21 @@ TARGET_BINS = $(addprefix $(OUTBIN_DIR)/,$(BINS))
 OUT_REV = $(OUTINC_DIR)/$(PROJECT)/$(REV_INC)
 OUT_INCS = $(addprefix $(OUTINC_DIR)/$(PROJECT)/,$(INCS))
 
-.PHONY: all inc rev lint-check
-.PHONY: test val-test
-.PHONY: clean clean-bin
-.PHONY: prepare-doc gen-doc publish-doc
+.PHONY: $(PREFIX)all $(PREFIX)inc $(PREFIX)rev
+.PHONY: $(PREFIX)test $(PREFIX)val-test
+.PHONY: $(PREFIX)clean $(PREFIX)clean-bin
 
-all: inc $(TARGET_SO) $(TARGET_BINS)
-
-REPLACE_REVISION=./.replace_revision.sh
-define REPLACE_REVISION_CMD
-#!/bin/sh
-
-str=$$3
-if [ -e "$$2" ]; then
-rev_in=`grep "$$3" $$2 | awk '{print $$3}' | tr -d '"'`
-else
-rev_in=""
-fi
-rev=`git rev-parse HEAD`;
-
-if [ -n "$$4" ] || [ "$$rev" != "$$rev_in" ]; then
-  mkdir -p `dirname $$2`
-  sed -E "s/#define[[:space:]]+$$3[[:space:]].*/#define $$3 \"$$rev\"/" $$1 > $$2
-fi
-endef
-export REPLACE_REVISION_CMD
-
-$(REPLACE_REVISION) :
-	@echo "$$REPLACE_REVISION_CMD" > $@
-	@chmod a+x $@
+$(PREFIX)all: $(PREFIX)inc $(TARGET_SO) $(TARGET_BINS)
 
 # always check revision
-rev: $(REPLACE_REVISION)
+$(PREFIX)rev: $(REPLACE_REVISION)
 	@$(REPLACE_REVISION) $(REV_INC) $(OUT_REV) $(GIT_COMMIT_MACRO)
 
 # copy REV_HEADER when updated
 $(OUT_REV): $(REPLACE_REVISION) $(REV_INC)
 	$(REPLACE_REVISION) $(REV_INC) $(OUT_REV) $(GIT_COMMIT_MACRO) force
 
-inc: $(OUT_INCS) rev $(OUT_REV)
+$(PREFIX)inc: $(OUT_INCS) $(PREFIX)rev $(OUT_REV)
 
 $(OUT_INCS) : $(OUTINC_DIR)/$(PROJECT)/%.h : %.h
 	@mkdir -p "$(dir $@)"
@@ -115,7 +91,7 @@ $(TARGET_TESTS) : $(OBJ_DIR)/% : %.c $(DEP_DIR)/%.d
 
 -include $(patsubst %,$(DEP_DIR)/%.d,$(basename $(TESTS)))
 
-test: $(TARGET_TESTS)
+$(PREFIX)test: $(TARGET_TESTS)
 	@result=0; \
      for x in $(TARGET_TESTS); do \
        printf "Running $$x ..."; \
@@ -131,7 +107,7 @@ test: $(TARGET_TESTS)
 
 TARGET_VAL_TESTS = $(addprefix $(OBJ_DIR)/,$(VAL_TESTS))
 
-val-test: $(TARGET_VAL_TESTS)
+$(PREFIX)val-test: $(TARGET_VAL_TESTS)
 	@result=0; \
      for x in $(TARGET_VAL_TESTS); do \
        printf "Valgrinding $$x ..."; \
@@ -145,44 +121,21 @@ val-test: $(TARGET_VAL_TESTS)
      done; \
      exit $$result
 
-gen-doc: prepare-doc
-	rm -rf html/*
-	doxygen doc/Doxyfile > /dev/null
-
-prepare-doc:
-	mkdir -p html
-	if [ ! -d html/.git ]; then \
-      git clone git@github.com:wantee/$(PROJECT).git html; \
-    fi
-	cd html && \
-    git checkout gh-pages
-
-publish-doc: gen-doc
-	cd html && \
-	git add * && \
-	git commit -a -m"generate doc on $(shell date)" && \
-	git push origin gh-pages
-
-lint-check : *.h *.cpp *.c
-	splint +posixlib +D__gnuc_va_list=int -fileextensions $^ 
-
 ifdef BINS
 
-clean-bin:
+$(PREFIX)clean-bin:
 	rm -f $(addprefix $(OUTBIN_DIR)/,$(BINS))
 	rm -rf $(addsuffix .dSYM,$(addprefix $(OUTBIN_DIR)/,$(BINS)))
 	rm -rf $(addprefix $(OUTBIN_DIR)/,$(filter-out ./,$(dir $(BINS))))
 
 else
 
-clean-bin:
+$(PREFIX)clean-bin:
 
 endif
 
-clean: clean-bin
+$(PREFIX)clean: $(PREFIX)clean-bin clean-static
 	rm -rf $(OBJ_DIR)
 	rm -rf $(DEP_DIR)
 	rm -rf $(OUTLIB_DIR)
 	rm -rf $(OUTINC_DIR)
-	rm -rf $(REPLACE_REVISION)
-	rm -f tags cscope.*
