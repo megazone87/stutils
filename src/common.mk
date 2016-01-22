@@ -3,10 +3,10 @@ COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 COMPILE.cc = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 LINK.o = $(CC) $(LDFLAGS) $(TARGET_ARCH)
 POSTCOMPILE = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d
-COMPILE_bin.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
-COMPILE_bin.cc = $(CC) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
-COMPILE_test_bin.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) -UNDEBUG -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
-COMPILE_test_bin.cc = $(CC) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -UNDEBUG -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
+COMPILE_bin.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) -o $@ $< -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
+COMPILE_bin.cc = $(CC) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ $< -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
+COMPILE_test_bin.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) -UNDEBUG -o $@ $<  -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
+COMPILE_test_bin.cc = $(CC) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -UNDEBUG -o $@ $< -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
 
 ifeq ($(shell uname -s),Darwin)
 TARGET_SO = $(OUTLIB_DIR)/lib$(PROJECT).dylib
@@ -77,7 +77,7 @@ $(TARGET_BINS) : $(OUT_REV) $(TARGET_SO)
 $(TARGET_BINS) : $(OUTBIN_DIR)/% : %.c $(DEP_DIR)/%.d
 	@mkdir -p "$(dir $@)"
 	@mkdir -p "$(dir $(DEP_DIR)/$*.d)"
-	$(COMPILE_bin.c) -o $@ $<
+	$(COMPILE_bin.c)
 	$(POSTCOMPILE)
 
 -include $(patsubst %,$(DEP_DIR)/%.d,$(basename $(BINS)))
@@ -88,7 +88,7 @@ $(TARGET_TESTS) : $(OUT_REV) $(TARGET_SO)
 $(TARGET_TESTS) : $(OBJ_DIR)/% : %.c $(DEP_DIR)/%.d
 	@mkdir -p "$(dir $@)"
 	@mkdir -p "$(dir $(DEP_DIR)/$*.d)"
-	$(COMPILE_test_bin.c) -o $@ $<
+	$(COMPILE_test_bin.c)
 	$(POSTCOMPILE)
 
 -include $(patsubst %,$(DEP_DIR)/%.d,$(basename $(TESTS)))
