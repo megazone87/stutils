@@ -136,6 +136,18 @@ $(PREFIX)clean-bin:
 
 endif
 
+ifdef TESTS
+
+$(PREFIX)clean-test:
+	rm -f $(TARGET_TESTS)
+	rm -rf $(addsuffix .dSYM,$(TARGET_TESTS))
+
+else
+
+$(PREFIX)clean-test:
+
+endif
+
 $(PREFIX)clean: $(PREFIX)clean-bin clean-static
 	rm -rf $(OBJ_DIR)
 	rm -rf $(DEP_DIR)
