@@ -7,7 +7,7 @@ OUTBIN_DIR = ..
 OBJ_DIR = ./.objs
 DEP_DIR = ./.deps
 
-CFLAGS = -Wall -pipe -g -m64
+CFLAGS += -Wall -pipe -g -m64
 CFLAGS += -march=native -mtune=native -O3
 CFLAGS += -I. -I$(OUTINC_DIR)
 CFLAGS += -DNDEBUG

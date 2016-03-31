@@ -1111,3 +1111,55 @@ int st_parse_int_array(const char *line, int **arr, int *n_arr)
 
     return 0;
 }
+
+int st_str_replace(char* res, size_t res_len,
+        const char* src, const char* from, const char* to,
+        int max_num)
+{
+    const char *str, *p;
+    size_t sz;
+    int num;
+
+    ST_CHECK_PARAM(res == NULL || res_len <= 0 
+            || src == NULL || from == NULL, -1);
+
+    str = src;
+    num = 0;
+    sz = 0;
+
+    while (max_num <= 0 || num < max_num) {
+        p = strstr(str, from);
+        if (p == NULL) {
+            break;
+        }
+
+        if (sz + p - str >= res_len) {
+            ST_WARNING("not enough space for result.");
+            goto ERR;
+        }
+        strncpy(res + sz, str, p - str);
+        sz += p - str;
+
+        if (to != NULL) {
+            if (sz + strlen(to) >= res_len) {
+                ST_WARNING("not enough space for result.");
+                goto ERR;
+            }
+            strcpy(res + sz, to);
+            sz += strlen(to);
+        }
+        ++num;
+        str = p + strlen(from);
+    }
+    if (sz + strlen(str) >= res_len) {
+        ST_WARNING("not enough space for result.");
+        goto ERR;
+    }
+    strcpy(res + sz, str);
+
+    return num;
+
+ERR:
+    res[sz] = '\0';
+    return -1;
+}

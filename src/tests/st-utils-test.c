@@ -422,6 +422,233 @@ FAILED:
     return -1;
 }
 
+static int unit_test_str_replace()
+{
+#define FROM "${x}"
+#define TO "hello"
+    char res[256];
+    char src[256];
+    int ncase;
+
+    fprintf(stderr, " Testing st_str_replace...\n");
+
+    ncase = 1;
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, "xxxxx");
+
+    if(st_str_replace(res, 256, src, FROM, TO, 0) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, src) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx");
+
+    if(st_str_replace(res, 256, src, FROM, TO, 0) != 1) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, TO"xxxx") != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, "xx"FROM"xx");
+
+    if(st_str_replace(res, 256, src, FROM, TO, 0) != 1) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, "xx"TO"xx") != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, "xxxx"FROM);
+
+    if(st_str_replace(res, 256, src, FROM, TO, 0) != 1) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, "xxxx"TO) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 256, src, FROM, TO, 0) != 2) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, TO"xxxx"TO) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+    return 0;
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 256, src, FROM, TO, 1) != 1) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, TO"xxxx"FROM) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 256, src, FROM, TO, 3) != 2) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, TO"xxxx"TO) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 256, src, FROM, NULL, 0) != 2) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, "xxxx") != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 256, src, FROM, "", 0) != 2) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, "xxxx") != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, strlen(TO) + 4, src, FROM, TO, 0) >= 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 2*strlen(TO) + 4, src, FROM, TO, 0) >= 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, strlen(TO) - 1, src, FROM, TO, 0) >= 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(src, FROM"xxxx"FROM);
+
+    if(st_str_replace(res, 5, src, FROM, NULL, 0) != 2) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(res, "xxxx") != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+#ifdef _ST_TEST_DEBUG_
+    printf("%s\n", res);
+#endif
+    fprintf(stderr, "Passed\n");
+
+    return 0;
+
+FAILED:
+    return -1;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -435,6 +662,10 @@ static int run_all_tests()
     }
 
     if (unit_test_parse_int_array() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_str_replace() != 0) {
         ret = -1;
     }
 

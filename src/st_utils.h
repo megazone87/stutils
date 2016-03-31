@@ -111,6 +111,16 @@ void st_qsort(void *const pbase, size_t total_elems, size_t size,
 
 int st_parse_int_array(const char *line, int **arr, int *n_arr);
 
+/**
+  * Replace 'max_num' ocurrences of 'from' in 'src' to 'to',
+  * storing result to 'res'.
+  *
+  * @return number of ocurrences replaced.
+  */
+int st_str_replace(char* res, size_t res_len,
+        const char* src, const char* from, const char* to,
+        int max_num);
+
 #ifdef __cplusplus
 }
 #endif
