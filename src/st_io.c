@@ -32,7 +32,7 @@ FILE* st_fopen(const char *name, const char *mode)
 {
     ST_CHECK_PARAM(name == NULL || mode == NULL, NULL);
 
-    if (name[0] == '\0' || (name[0] == '-' && name[1] == '\0')) {
+    if (name[0] == '-' && name[1] == '\0') {
         if (mode[0] == 'r') {
             return stdin;
         } else if (mode[0] == 'w' || mode[0] == 'a') {
