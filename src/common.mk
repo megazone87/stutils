@@ -17,8 +17,8 @@ COMPILE_bin.cc += -L$(OBJ_DIR)
 COMPILE_test_bin.c += -L$(OBJ_DIR)
 COMPILE_test_bin.cc += -L$(OBJ_DIR)
 else
-COMPILE_bin.c += -L$(OUTLIB_DIR) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
-COMPILE_bin.cc += -L$(OUTLIB_DIR) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
+COMPILE_bin.c += -L$(OUTLIB_DIR) -Wl,-rpath,$(abspath $(OUTLIB_DIR)) -Wl,-rpath,'$$ORIGIN/../lib'
+COMPILE_bin.cc += -L$(OUTLIB_DIR) -Wl,-rpath,$(abspath $(OUTLIB_DIR)) -Wl,-rpath,'$$ORIGIN/../lib'
 COMPILE_test_bin.c += -L$(OUTLIB_DIR) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
 COMPILE_test_bin.cc += -L$(OUTLIB_DIR) -Wl,-rpath,$(abspath $(OUTLIB_DIR))
 endif
