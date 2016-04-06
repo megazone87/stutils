@@ -12,8 +12,8 @@ COMPILE_bin.cc = $(CC) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ $< -L$(OUTLIB_D
 COMPILE_test_bin.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) -UNDEBUG -o $@ $<  -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS)
 COMPILE_test_bin.cc = $(CC) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -UNDEBUG -o $@ $< -L$(OUTLIB_DIR) -l$(PROJECT) $(LDFLAGS)
 ifdef STATIC_LINK
-COMPILE_bin.c += -L$(OBJ_DIR)
-COMPILE_bin.cc += -L$(OBJ_DIR)
+COMPILE_bin.c += -L$(OBJ_DIR) -Wl,-rpath,'$$ORIGIN/../lib'
+COMPILE_bin.cc += -L$(OBJ_DIR) -Wl,-rpath,'$$ORIGIN/../lib'
 COMPILE_test_bin.c += -L$(OBJ_DIR)
 COMPILE_test_bin.cc += -L$(OBJ_DIR)
 else
