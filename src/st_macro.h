@@ -52,6 +52,8 @@ extern "C" {
 typedef unsigned int uint;
 #endif
 
+#define iceil(n, m) (((n) - 1) / (m) + 1)
+
 #define TIMEDIFF(s, e) (((e).tv_sec - (s).tv_sec)*1000 \
         + ((e).tv_usec - (s).tv_usec)/1000)
 
