@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -91,7 +91,7 @@ int st_stack_pop(st_stack_t* st_stack, void** obj)
     }
 
     *obj = st_stack->data_arr[--st_stack->top];
-    
+
     return ST_STACK_OK;
 }
 
@@ -106,6 +106,11 @@ bool st_stack_empty(st_stack_t* st_stack)
     return (st_stack->top == 0);
 }
 
+st_stack_id_t st_stack_size(st_stack_t* st_stack)
+{
+    return st_stack->top;
+}
+
 int st_stack_top(st_stack_t* st_stack, void** obj)
 {
     if(st_stack->top == 0)
@@ -114,7 +119,7 @@ int st_stack_top(st_stack_t* st_stack, void** obj)
     }
 
     *obj = st_stack->data_arr[st_stack->top-1];
-    
+
     return ST_STACK_OK;
 }
 
@@ -127,6 +132,6 @@ int st_stack_topn(st_stack_t* st_stack, st_stack_id_t n, void** obj)
     }
 
     *obj = st_stack->data_arr[st_stack->top-n];
-    
+
     return ST_STACK_OK;
 }
