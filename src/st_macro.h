@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -54,6 +54,9 @@ typedef unsigned int uint;
 
 #define iceil(n, m) (((n) - 1) / (m) + 1)
 
+#define STR(x)          # x
+#define xSTR(x)         STR(x)
+
 #define TIMEDIFF(s, e) (((e).tv_sec - (s).tv_sec)*1000 \
         + ((e).tv_usec - (s).tv_usec)/1000)
 
@@ -91,11 +94,11 @@ typedef unsigned int uint;
     }\
     } while(0)
 
-/*@ignore@*/ 
+/*@ignore@*/
 #ifdef _ST_NO_CHECK_PARAM_
-#define ST_CHECK_PARAM_VOID(cond) 
+#define ST_CHECK_PARAM_VOID(cond)
 #define ST_CHECK_PARAM_VOID_EX(cond, fmt, ...)
-#define ST_CHECK_PARAM(cond, ret) 
+#define ST_CHECK_PARAM(cond, ret)
 #define ST_CHECK_PARAM_EX(cond, ret, fmt, ...)
 #else
 #define ST_CHECK_PARAM_VOID(cond) \
@@ -104,7 +107,7 @@ typedef unsigned int uint;
         ST_WARNING("Wrong param to %s. ", __func__);\
         return;\
     }
-    
+
 #define ST_CHECK_PARAM_VOID_EX(cond, fmt, ...) \
     if(cond) \
     {\
@@ -121,8 +124,8 @@ typedef unsigned int uint;
         return ret;\
     }
 #endif
-/*@end@*/ 
-    
+/*@end@*/
+
 #ifdef __cplusplus
 }
 #endif
