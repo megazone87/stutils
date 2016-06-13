@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -71,7 +71,7 @@ void remove_newline(char *line)
         *pstr = 0;
     }
 }
- 
+
 void remove_leading_space(char *line)
 {
     char *pstr = NULL;
@@ -90,11 +90,11 @@ void remove_leading_space(char *line)
             *p = *pstr;
             p++;
             pstr++;
-        } 
+        }
         *p = '\0';
     }
 }
- 
+
 void trim(char *line)
 {
     char *pstr = NULL;
@@ -114,8 +114,8 @@ void trim(char *line)
         *pstr = '\0';
     }
 }
- 
-int split_line(const char *line, char *fields, 
+
+int split_line(const char *line, char *fields,
         int n_field, int field_len, const char *seps)
 {
     const char *p;
@@ -238,27 +238,26 @@ void iqsort(int *arr, int l, int u,
     arr[l] = arr[j];
     arr[j] = t;
 
-    iqsort(arr, l, j-1, cmp, args); 
-    iqsort(arr, j+1, u, cmp, args); 
+    iqsort(arr, l, j-1, cmp, args);
+    iqsort(arr, j+1, u, cmp, args);
 }
 
 const char* get_next_token(const char *line, char *token)
 {
-    while((*line == ' ' || *line == '\t') && *line)
-    {
+    while(*line && (*line == ' ' || *line == '\t'
+                    || *line == '\r' || *line == '\n')) {
         line++;
     }
 
-    while(*line && *line != ' ' && *line != '\t')
-    {
+    while(*line && *line != ' ' && *line != '\t'
+            && *line != '\r' && *line != '\n') {
         *token = *line;
         token++;
         line++;
     }
 
     *token = 0;
-    if(*line == 0)
-    {
+    if(*line == 0) {
         line = NULL;
     }
 
@@ -390,7 +389,7 @@ uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed )
   h ^= h >> 15;
 
   return h;
-} 
+}
 
 static unsigned st_rand_state = -1726662223;
 
@@ -458,7 +457,7 @@ void st_shuffle_r(int *a, size_t n, unsigned *seed)
     }
 }
 
-char* st_fgets(char **line, size_t *sz, FILE *fp, bool *err) 
+char* st_fgets(char **line, size_t *sz, FILE *fp, bool *err)
 {
     char *ptr;
     size_t old_sz;
@@ -538,7 +537,7 @@ ERR:
     return NULL;
 }
 
-int st_readline(FILE *fp, const char *fmt, ...) 
+int st_readline(FILE *fp, const char *fmt, ...)
 {
     char *line = NULL;
     size_t sz = 0;
@@ -693,7 +692,7 @@ int st_escape_args(int argc, const char *argv[], char *ans, size_t ans_len)
     return 0;
 }
 
-off_t st_fsize(const char *filename) 
+off_t st_fsize(const char *filename)
 {
     struct stat st;
 
@@ -1120,7 +1119,7 @@ int st_str_replace(char* res, size_t res_len,
     size_t sz;
     int num;
 
-    ST_CHECK_PARAM(res == NULL || res_len <= 0 
+    ST_CHECK_PARAM(res == NULL || res_len <= 0
             || src == NULL || from == NULL, -1);
 
     str = src;
