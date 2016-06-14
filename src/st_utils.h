@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,7 +46,7 @@ void remove_leading_space(char *line);
 
 void trim(char *line);
 
-int split_line(const char *line, char *fields, 
+int split_line(const char *line, char *fields,
         int n_field, int field_len, const char *seps);
 
 unsigned int highest_bit_mask(unsigned int num, int overflow);
@@ -91,7 +91,7 @@ typedef struct _st_gauss_r_t {
     unsigned seed;
 
     double V1;
-    double V2; 
+    double V2;
     double S;
     int phase;
 } st_gauss_r_t;
@@ -112,14 +112,23 @@ void st_qsort(void *const pbase, size_t total_elems, size_t size,
 int st_parse_int_array(const char *line, int **arr, int *n_arr);
 
 /**
-  * Replace 'max_num' ocurrences of 'from' in 'src' to 'to',
-  * storing result to 'res'.
-  *
-  * @return number of ocurrences replaced.
-  */
+ * Replace 'max_num' ocurrences of 'from' in 'src' to 'to',
+ * storing result to 'res'.
+ *
+ * @return number of ocurrences replaced.
+ */
 int st_str_replace(char* res, size_t res_len,
         const char* src, const char* from, const char* to,
         int max_num);
+
+/**
+ * Convert string to long long int.
+ * Support k,M,G,T... or Ki,Mi,Gi,Ti... suffixes.
+ *
+ * @param[in] str string format.
+ * @return converted number.
+ */
+long long st_str2ll(const char *str);
 
 #ifdef __cplusplus
 }

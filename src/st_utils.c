@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
@@ -1161,4 +1162,74 @@ int st_str_replace(char* res, size_t res_len,
 ERR:
     res[sz] = '\0';
     return -1;
+}
+
+long long st_str2ll(const char *str)
+{
+    long long l;
+    size_t len;
+
+    l = atoll(str);
+
+    if (l == 0) {
+        return l;
+    }
+
+    len = strlen(str);
+
+    if (len < 1) {
+        return l;
+    }
+    switch (str[len - 1]) {
+        /* All fall through */
+        case 'Y':
+            l *= 1000;
+        case 'Z':
+            l *= 1000;
+        case 'E':
+            l *= 1000;
+        case 'P':
+            l *= 1000;
+        case 'T':
+            l *= 1000;
+        case 'G':
+            l *= 1000;
+        case 'M':
+            l *= 1000;
+        case 'k':
+            l *= 1000;
+            break;
+        case 'i':
+            if (len < 2) {
+                return l;
+            }
+
+            switch (str[len - 2]) {
+                /* All fall through */
+                case 'Y':
+                    l *= 1024;
+                case 'Z':
+                    l *= 1024;
+                case 'E':
+                    l *= 1024;
+                case 'P':
+                    l *= 1024;
+                case 'T':
+                    l *= 1024;
+                case 'G':
+                    l *= 1024;
+                case 'M':
+                    l *= 1024;
+                case 'K':
+                    l *= 1024;
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+
+    return l;
 }

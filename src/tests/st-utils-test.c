@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -649,6 +649,131 @@ FAILED:
     return -1;
 }
 
+#define MAX_STR_LEN 256
+static int unit_test_str2ll()
+{
+    char num[MAX_STR_LEN];
+    char suf[MAX_STR_LEN];
+    long long ref = 2568340;
+    int ncase;
+
+    fprintf(stderr, " Testing st_str2ll...\n");
+
+    ncase = 1;
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(num, "xx12");
+
+    if(st_str2ll(num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    snprintf(num, MAX_STR_LEN, "%lld", ref);
+
+    if(st_str2ll(num) != ref) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "Ki");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref * 1024) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "Kixx");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "Mi");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref * 1024 * 1024) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "Gi");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref * 1024 * 1024 * 1024) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "k");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref * 1000) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "kxx");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "M");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref * 1000 * 1000) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "G");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(st_str2ll(num) != ref * 1000 * 1000 * 1000) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    return 0;
+
+FAILED:
+    return -1;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -666,6 +791,10 @@ static int run_all_tests()
     }
 
     if (unit_test_str_replace() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_str2ll() != 0) {
         ret = -1;
     }
 
