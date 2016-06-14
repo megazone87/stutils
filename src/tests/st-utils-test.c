@@ -774,6 +774,105 @@ FAILED:
     return -1;
 }
 
+static int unit_test_ll2str()
+{
+    char num[MAX_STR_LEN];
+    char suf[MAX_STR_LEN];
+    char buf[MAX_STR_LEN];
+    long long ref = 2568341;
+    int ncase;
+
+    fprintf(stderr, " Testing st_ll2str...\n");
+
+    ncase = 1;
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    if(st_ll2str(buf, 9, ref * 1024, true) != NULL) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    snprintf(num, MAX_STR_LEN, "%lld", ref);
+
+    if(strcmp(st_ll2str(buf, MAX_STR_LEN, ref, true), num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "Ki");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(strcmp(st_ll2str(buf, MAX_STR_LEN, ref * 1024, true), num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "Mi");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(strcmp(st_ll2str(buf, MAX_STR_LEN,
+                    ref * 1024 * 1024, true), num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    if(st_ll2str(buf, 8, ref * 1000, false) != NULL) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    snprintf(num, MAX_STR_LEN, "%lld", ref);
+
+    if(strcmp(st_ll2str(buf, MAX_STR_LEN, ref, false), num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "k");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(strcmp(st_ll2str(buf, MAX_STR_LEN, ref * 1000, false), num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    strcpy(suf, "M");
+    snprintf(num, MAX_STR_LEN, "%lld%s", ref, suf);
+
+    if(strcmp(st_ll2str(buf, MAX_STR_LEN,
+                    ref * 1000 * 1000, false), num) != 0) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    return 0;
+
+FAILED:
+    return -1;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -795,6 +894,10 @@ static int run_all_tests()
     }
 
     if (unit_test_str2ll() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_ll2str() != 0) {
         ret = -1;
     }
 

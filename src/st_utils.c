@@ -1233,3 +1233,53 @@ long long st_str2ll(const char *str)
 
     return l;
 }
+
+char* st_ll2str(char *str, size_t len, long long l, bool binary)
+{
+    static char suf[] = {'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
+    long long t;
+    long long base;
+    size_t sz;
+    int n;
+
+    ST_CHECK_PARAM(str == NULL || len <= 0, NULL);
+
+    t = l;
+    n = 0;
+    if (binary) {
+        base = 1024;
+    } else {
+        base = 1000;
+    }
+    while (t != 0 && t % base == 0) {
+        t = t / base;
+        n++;
+        if (n >= sizeof(suf)) {
+            break;
+        }
+    }
+
+    snprintf(str, len, "%lld", t);
+
+    if (n > 0) {
+        sz = strlen(str);
+        if (binary) {
+            if (sz > len - 3) {
+                ST_WARNING("string buf len not enough");
+                return NULL;
+            }
+            str[sz] = toupper(suf[n - 1]);
+            str[sz+1] = 'i';
+            str[sz+2] = '\0';
+        } else {
+            if (sz > len - 2) {
+                ST_WARNING("string buf len not enough");
+                return NULL;
+            }
+            str[sz] = suf[n - 1];
+            str[sz+1] = '\0';
+        }
+    }
+
+    return str;
+}

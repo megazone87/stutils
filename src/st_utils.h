@@ -130,6 +130,18 @@ int st_str_replace(char* res, size_t res_len,
  */
 long long st_str2ll(const char *str);
 
+/**
+ * Convert long long int to string.
+ * Support k,M,G,T... or Ki,Mi,Gi,Ti... suffixes.
+ *
+ * @param[out] str string buffer.
+ * @param[in] len length of string buffer.
+ * @param[in] l long long int.
+ * @param[in] binary base-1024 if true, otherwise base-1000.
+ * @return NULL on error, otherwise the string buffer.
+ */
+char* st_ll2str(char *str, size_t len, long long l, bool binary);
+
 #ifdef __cplusplus
 }
 #endif
