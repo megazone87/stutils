@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,29 +30,32 @@
 #include "st_log.h"
 #include "st_conf.h"
 
+#define SEC_NUM     10
+#define PARAM_NUM    100
+
 static int resize_sec(st_conf_section_t *sec)
 {
     if (sec->param_num >= sec->param_cap) {
         sec->param_cap += PARAM_NUM;
-        sec->param = (st_conf_param_t *) realloc(sec->param, 
+        sec->param = (st_conf_param_t *) realloc(sec->param,
                     sec->param_cap * sizeof(st_conf_param_t));
         if (sec->param == NULL) {
             ST_WARNING("Failed to realloc param for sec.");
             goto ERR;
         }
-        memset(sec->param + sec->param_num, 0, 
+        memset(sec->param + sec->param_num, 0,
                 PARAM_NUM * sizeof(st_conf_param_t));
     }
 
     if (sec->def_param_num >= sec->def_param_cap) {
         sec->def_param_cap += PARAM_NUM;
-        sec->def_param = (st_conf_param_t *) realloc(sec->def_param, 
+        sec->def_param = (st_conf_param_t *) realloc(sec->def_param,
                     sec->def_param_cap * sizeof(st_conf_param_t));
         if (sec->def_param == NULL) {
             ST_WARNING("Failed to realloc def_param for sec.");
             goto ERR;
         }
-        memset(sec->def_param + sec->def_param_num, 0, 
+        memset(sec->def_param + sec->def_param_num, 0,
                 PARAM_NUM * sizeof(st_conf_param_t));
     }
 
@@ -73,13 +76,13 @@ st_conf_section_t* st_conf_new_sec(st_conf_t *conf, const char *name)
 
     if (conf->sec_num >= conf->sec_cap) {
         conf->sec_cap += SEC_NUM;
-        conf->secs = (st_conf_section_t *) realloc(conf->secs, 
+        conf->secs = (st_conf_section_t *) realloc(conf->secs,
                     conf->sec_cap * sizeof(st_conf_section_t));
         if (conf->secs == NULL) {
             ST_WARNING("Failed to realloc secs.");
             goto ERR;
         }
-        memset(conf->secs + conf->sec_num, 0, 
+        memset(conf->secs + conf->sec_num, 0,
                 SEC_NUM * sizeof(st_conf_section_t));
     }
 
@@ -99,7 +102,7 @@ ERR:
 static FILE *g_cur_fp = NULL;
 static FILE *g_global_fp = NULL;
 
-int st_conf_add_param(st_conf_section_t *sec, const char *key, 
+int st_conf_add_param(st_conf_section_t *sec, const char *key,
         const char *value)
 {
     st_conf_param_t *param;
@@ -132,7 +135,7 @@ int st_conf_add_param(st_conf_section_t *sec, const char *key,
     return 0;
 }
 
-int st_resolve_param(const char *line, st_conf_t *pconf, 
+int st_resolve_param(const char *line, st_conf_t *pconf,
         st_conf_section_t** sec)
 {
     char buffer[MAX_ST_CONF_LINE_LEN];
@@ -212,7 +215,7 @@ int st_resolve_param(const char *line, st_conf_t *pconf,
             ST_WARNING("Failed to st_conf_new_sec.");
             return -1;
         }
-        
+
         if (buffer[1] == '#') {
             (*sec)->comment_out = 1;
         }
@@ -325,6 +328,7 @@ ERR:
 int st_conf_get_str(st_conf_t *pconf, const char *sec_name,
         const char *key, char *value, int vlen, int *sec_i)
 {
+    char name[MAX_ST_CONF_LEN];
     int s;
     int p;
 
@@ -336,31 +340,14 @@ int st_conf_get_str(st_conf_t *pconf, const char *sec_name,
     }
 
     if (sec_name == NULL || sec_name[0] == '\0') {
-        s = 0;
-        for (p = 0; p < pconf->secs[s].param_num; p++) {
-            if (strcasecmp(pconf->secs[s].param[p].key, key) == 0) {
-                pconf->secs[s].param[p].used = 1;
-                strncpy(value, pconf->secs[s].param[p].value, vlen);
-                value[vlen - 1] = 0;
-                break;
-            }
-        }
-
-        if (p >= pconf->secs[s].param_num) {
-            if (sec_i != NULL) {
-                *sec_i = s;
-            }
-            return -1;
-        }
-
-        if (sec_i != NULL) {
-            *sec_i = s;
-        }
-        return 0;
+        strncpy(name, DEF_SEC_NAME, MAX_ST_CONF_LEN);
+    } else {
+        strncpy(name, sec_name, MAX_ST_CONF_LEN);
     }
+    name[MAX_ST_CONF_LEN - 1] = '\0';
 
     for (s = 0; s < pconf->sec_num; s++) {
-        if (strcasecmp(pconf->secs[s].name, sec_name) == 0) {
+        if (strcasecmp(pconf->secs[s].name, name) == 0) {
             for (p = 0; p < pconf->secs[s].param_num; p++) {
                 if (strcasecmp(pconf->secs[s].param[p].key, key) == 0) {
                     pconf->secs[s].param[p].used = 1;
@@ -436,12 +423,12 @@ int st_conf_get_bool(st_conf_t *pconf, const char *sec_name,
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
-    if (st_conf_get_str(pconf, sec_name, key, v, 
+    if (st_conf_get_str(pconf, sec_name, key, v,
                 MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
         return -1;
     }
 
-    if (v[0] == '\0' // for no argument options, e.g. --help 
+    if (v[0] == '\0' // for no argument options, e.g. --help
             || strncmp(v, "1", 2) == 0
             || strncasecmp(v, "T", 2) == 0
             || strncasecmp(v, "TRUE", 5) == 0) {
@@ -504,7 +491,7 @@ int st_conf_get_int(st_conf_t *pconf, const char *sec_name,
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
-    if (st_conf_get_str(pconf, sec_name, key, v, 
+    if (st_conf_get_str(pconf, sec_name, key, v,
                 MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
         return -1;
     }
@@ -564,7 +551,7 @@ int st_conf_get_uint(st_conf_t *pconf, const char *sec_name,
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
-    if (st_conf_get_str(pconf, sec_name, key, v, 
+    if (st_conf_get_str(pconf, sec_name, key, v,
                 MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
         return -1;
     }
@@ -623,7 +610,7 @@ int st_conf_get_long(st_conf_t *pconf, const char *sec_name,
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
-    if (st_conf_get_str(pconf, sec_name, key, v, 
+    if (st_conf_get_str(pconf, sec_name, key, v,
                 MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
         return -1;
     }
@@ -683,7 +670,7 @@ int st_conf_get_ulong(st_conf_t *pconf, const char *sec_name,
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
-    if (st_conf_get_str(pconf, sec_name, key, v, 
+    if (st_conf_get_str(pconf, sec_name, key, v,
                 MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
         return -1;
     }
@@ -742,7 +729,7 @@ int st_conf_get_double(st_conf_t *pconf, const char *sec_name,
 {
     char v[MAX_ST_CONF_LINE_LEN];
 
-    if (st_conf_get_str(pconf, sec_name, key, v, 
+    if (st_conf_get_str(pconf, sec_name, key, v,
                 MAX_ST_CONF_LINE_LEN, sec_i) < 0) {
         return -1;
     }
@@ -858,13 +845,14 @@ void st_conf_show(st_conf_t *pconf, const char *header)
         ST_CLEAN("[%s]", st_conf_normalize_key(pconf->secs[s].name));
         for (p = 0; p < pconf->secs[s].param_num; p++) {
             ST_CLEAN("%s{%s : %s}", pconf->secs[s].param[p].used ? "" : "*",
-                    st_conf_normalize_key(pconf->secs[s].param[p].key), 
+                    st_conf_normalize_key(pconf->secs[s].param[p].key),
                     pconf->secs[s].param[p].value);
         }
         for (p = 0; p < pconf->secs[s].def_param_num; p++) {
-            ST_CLEAN("{%s : %s}#", 
+            ST_CLEAN("{%s : %s}#",
                     st_conf_normalize_key(pconf->secs[s].def_param[p].key),
                     pconf->secs[s].def_param[p].value);
         }
+        ST_CLEAN("");
     }
 }

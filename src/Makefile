@@ -31,9 +31,11 @@ SRCS = st_dict.c \
        st_opt.c \
        st_semaphore.c
 
-TESTS = tests/st-utils-test
+TESTS = tests/st-utils-test \
+        tests/st-conf-test
 
-VAL_TESTS = tests/st-utils-test
+VAL_TESTS = tests/st-utils-test \
+            tests/st-conf-test
 
 .PHONY: all
 all:
