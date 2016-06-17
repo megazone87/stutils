@@ -333,6 +333,7 @@ void st_opt_show_usage(st_opt_t *opt, FILE *fp, bool show_format)
         fprintf(fp, "Format: --help\n");
         fprintf(fp, "        --key=value\n");
         fprintf(fp, "        --sec^key=value (with section specified)\n");
+        fprintf(fp, "        --sec^[sub1^...subN^]key=value (with subsection(s) specified)\n");
     }
 }
 
@@ -340,12 +341,12 @@ void st_opt_show_usage(st_opt_t *opt, FILE *fp, bool show_format)
 int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
 {
     char key_value[2*MAX_LINE_LEN];
-    char sec_key[2*MAX_LINE_LEN];
+    char sec_key[MAX_LINE_LEN];
+    char *key, *p;
 
     st_conf_section_t *sec;
 	unsigned arg;
     int num_kv;
-    int num_sk;
 
     for (arg = 1; argv[arg]; arg++) {
         if (strncmp(argv[arg], "--", 2) == 0) {
@@ -377,22 +378,31 @@ int st_opt_parse_one(st_opt_t *opt, int *argc, const char *argv[])
         }
     }
 
-    num_sk = split_line(key_value, sec_key, 2, MAX_LINE_LEN, "^");
-    if (num_sk != 1 && num_sk != 2) {
-        ST_WARNING("Failed error option[%s]", argv[arg]);
-        return -1;
-    }
+    strncpy(sec_key, key_value, MAX_LINE_LEN);
+    sec_key[MAX_LINE_LEN - 1] = '\0';
 
-    if (num_sk == 2) {
+    key = strrchr(sec_key, '^');
+    if (key != NULL) {
+        *key = '\0';
+        ++key;
+
+        p = sec_key;
+        while (*p != '\0') {
+            if (*p == '^') {
+                *p = '/';
+            }
+            ++p;
+        }
+
+        st_opt_normalize_key(sec_key, false);
         sec = st_conf_new_sec(opt->cmd_conf, sec_key);
         if (sec == NULL) {
             ST_WARNING("Failed to st_conf_new_sec.");
             return -1;
         }
 
-        st_opt_normalize_key(sec_key + MAX_LINE_LEN, false);
-        if (st_conf_add_param(sec, sec_key + MAX_LINE_LEN,
-                    key_value + MAX_LINE_LEN) < 0) {
+        st_opt_normalize_key(key, false);
+        if (st_conf_add_param(sec, key, key_value + MAX_LINE_LEN) < 0) {
             ST_WARNING("Failed to st_conf_add_param. key[%s], value[%s]",
                     sec_key + MAX_LINE_LEN, key_value + MAX_LINE_LEN);
             return -1;
