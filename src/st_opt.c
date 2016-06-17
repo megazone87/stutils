@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Wang Jian
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,6 +31,8 @@
 #include "st_utils.h"
 #include "st_opt.h"
 
+#define INFO_NUM 100
+
 static void st_opt_consume(int *argc, const char *argv[], unsigned optnum)
 {
 	memmove(&argv[optnum], &argv[optnum+1],
@@ -41,15 +43,15 @@ static void st_opt_consume(int *argc, const char *argv[], unsigned optnum)
 static int resize_opt_info(st_opt_t *opt)
 {
     if (opt->info_num >= opt->info_cap) {
-        opt->info_cap += PARAM_NUM;
-        opt->infos = (st_opt_info_t *) realloc(opt->infos, 
+        opt->info_cap += INFO_NUM;
+        opt->infos = (st_opt_info_t *) realloc(opt->infos,
                     opt->info_cap * sizeof(st_opt_info_t));
         if (opt->infos == NULL) {
             ST_WARNING("Failed to realloc st_opt_info.");
             goto ERR;
         }
-        memset(opt->infos + opt->info_num, 0, 
-                PARAM_NUM * sizeof(st_opt_info_t));
+        memset(opt->infos + opt->info_num, 0,
+                INFO_NUM * sizeof(st_opt_info_t));
     }
 
     return 0;
@@ -74,14 +76,14 @@ st_opt_t* st_opt_create()
         goto ERR;
     }
 
-    opt->infos = (st_opt_info_t *)malloc(sizeof(st_opt_info_t)*PARAM_NUM);
+    opt->infos = (st_opt_info_t *)malloc(sizeof(st_opt_info_t)*INFO_NUM);
     if (opt->infos == NULL) {
         ST_WARNING("Failed to malloc st_opt_info.");
         goto ERR;
     }
-    memset(opt->infos, 0, sizeof(st_opt_info_t)*PARAM_NUM);
+    memset(opt->infos, 0, sizeof(st_opt_info_t)*INFO_NUM);
     opt->info_num = 0;
-    opt->info_cap = PARAM_NUM;
+    opt->info_cap = INFO_NUM;
 
     return opt;
 ERR:
@@ -135,7 +137,7 @@ static int st_opt_info_comp(const void *a, const void *b)
     info2 = (st_opt_info_t *)b;
 
     return strcmp(info1->sec_name, info2->sec_name);
-} 
+}
 
 static char* st_opt_type_str(st_opt_type_t type)
 {
@@ -201,7 +203,7 @@ static void st_info_type_print_val(st_opt_info_t *info, FILE *fp)
 
 static int st_opt_add_info(st_opt_t *opt, st_opt_type_t type,
         const char *sec_name, const char *key, void *value,
-        const char *desc) 
+        const char *desc)
 {
     st_opt_info_t *info;
 
@@ -285,7 +287,7 @@ static char* st_opt_normalize_key(char *key, bool forprint)
     return key;
 }
 
-void st_opt_show_usage(st_opt_t *opt, FILE *fp)
+void st_opt_show_usage(st_opt_t *opt, FILE *fp, bool show_format)
 {
     char sec[MAX_ST_CONF_LEN];
     int i;
@@ -316,7 +318,7 @@ void st_opt_show_usage(st_opt_t *opt, FILE *fp)
             fprintf(fp, ")\n");
         } else {
             fprintf(fp, "  --%s^%*s: %s (%s, default = ",
-                    opt->infos[i].sec_name, 
+                    opt->infos[i].sec_name,
                     -(25-1-(int)strlen(opt->infos[i].sec_name)),
                     opt->infos[i].name,
                     opt->infos[i].desc,
@@ -325,11 +327,13 @@ void st_opt_show_usage(st_opt_t *opt, FILE *fp)
             fprintf(fp, ")\n");
         }
     }
-
     fprintf(fp, "\n");
-    fprintf(fp, "Format: --help\n");
-    fprintf(fp, "        --key=value\n");
-    fprintf(fp, "        --sec^key=value (with section specified)\n");
+
+    if (show_format) {
+        fprintf(fp, "Format: --help\n");
+        fprintf(fp, "        --key=value\n");
+        fprintf(fp, "        --sec^key=value (with section specified)\n");
+    }
 }
 
 /* Returns 1 if argument consumed, 0 if all done, -1 on error. */
@@ -450,7 +454,7 @@ int st_opt_get_str(st_opt_t *popt, const char *sec_name,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_str_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_str_def(popt->file_conf, sec_name, key,
                 value, vlen, default_value);
 
         if (st_conf_get_str(popt->cmd_conf, sec_name, key,
@@ -478,7 +482,7 @@ int st_opt_get_bool(st_opt_t *popt, const char *sec_name, const char *key,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_bool_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_bool_def(popt->file_conf, sec_name, key,
                 value, default_value);
 
         if (st_conf_get_bool(popt->cmd_conf, sec_name, key,
@@ -506,7 +510,7 @@ int st_opt_get_int(st_opt_t *popt, const char *sec_name,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_int_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_int_def(popt->file_conf, sec_name, key,
                 value, default_value);
 
         if (st_conf_get_int(popt->cmd_conf, sec_name, key,
@@ -535,7 +539,7 @@ int st_opt_get_uint(st_opt_t *popt, const char *sec_name,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_uint_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_uint_def(popt->file_conf, sec_name, key,
                 value, default_value);
 
         if (st_conf_get_uint(popt->cmd_conf, sec_name, key,
@@ -563,7 +567,7 @@ int st_opt_get_long(st_opt_t *popt, const char *sec_name,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_long_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_long_def(popt->file_conf, sec_name, key,
                 value, default_value);
 
         if (st_conf_get_long(popt->cmd_conf, sec_name, key,
@@ -592,7 +596,7 @@ int st_opt_get_ulong(st_opt_t *popt, const char *sec_name,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_ulong_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_ulong_def(popt->file_conf, sec_name, key,
                 value, default_value);
 
         if (st_conf_get_ulong(popt->cmd_conf, sec_name, key,
@@ -621,7 +625,7 @@ int st_opt_get_double(st_opt_t *popt, const char *sec_name,
     int ret;
 
     if (popt->file_conf != NULL) {
-        ret = st_conf_get_double_def(popt->file_conf, sec_name, key, 
+        ret = st_conf_get_double_def(popt->file_conf, sec_name, key,
                 value, default_value);
 
         if (st_conf_get_double(popt->cmd_conf, sec_name, key,
@@ -636,7 +640,7 @@ int st_opt_get_double(st_opt_t *popt, const char *sec_name,
             return -1;
         }
     }
-    
+
     ret = st_opt_add_info(popt, SOT_DOUBLE, sec_name, key,
             (void *)&default_value, desc);
 
