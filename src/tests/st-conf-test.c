@@ -58,8 +58,13 @@ static int num_file = 0;
 
 static const char* add_file()
 {
+    int fd;
+
     char template[] = "/tmp/st-conf-XXXXXX";
-    strncpy(files[num_file], mktemp(template), MAX_DIR_LEN);
+    fd = mkstemp(template);
+    assert(fd != -1);
+    safe_close(fd);
+    strncpy(files[num_file], template, MAX_DIR_LEN);
     files[num_file][MAX_DIR_LEN - 1] = '\0';
     num_file++;
 

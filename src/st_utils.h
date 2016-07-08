@@ -109,7 +109,35 @@ int st_permutation(void *base, size_t n, size_t sz,
 void st_qsort(void *const pbase, size_t total_elems, size_t size,
 	    int (*cmp) (const void *, const void *, void *), void *arg);
 
-int st_parse_int_array(const char *line, int **arr, int *n_arr);
+/**
+ * Parse int array from a comma seperated string.
+ *
+ * @param[in] str input string.
+ * @param[out] arr output int array, may be malloced/realloced.
+ * @param[out] n_arr number of ints.
+ * @return non-zero value if any error.
+ */
+int st_parse_int_array(const char *str, int **arr, int *n_arr);
+
+/**
+ * Weighted integer.
+ */
+typedef struct _st_weighted_int_t_ {
+    int i;   /**< integer */
+    float w; /**< weight. */
+} st_wt_int_t;
+
+/**
+ * Parse weighted int array from a comma seperated string.
+ *
+ * @param[in] str input string.
+ * @param[out] arr output int array, may be malloced/realloced.
+ * @param[out] n_arr number of ints.
+ * @param[in] def_wt default value for weight.
+ * @return non-zero value if any error.
+ */
+int st_parse_wt_int_array(const char *str, st_wt_int_t **arr, int *n_arr,
+        float def_wt);
 
 /**
  * Replace 'max_num' ocurrences of 'from' in 'src' to 'to',
@@ -141,6 +169,22 @@ long long st_str2ll(const char *str);
  * @return NULL on error, otherwise the string buffer.
  */
 char* st_ll2str(char *str, size_t len, long long l, bool binary);
+
+/**
+ * Sort int array.
+ *
+ * @param[in] A array.
+ * @param[in] n length of array.
+ */
+void st_int_sort(int *A, size_t n);
+
+/**
+ * Sort weighted int array.
+ *
+ * @param[in] A array.
+ * @param[in] n length of array.
+ */
+void st_wt_int_sort(st_wt_int_t *A, size_t n);
 
 #ifdef __cplusplus
 }

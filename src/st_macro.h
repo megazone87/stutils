@@ -32,6 +32,7 @@ extern "C" {
 #include <stdlib.h>
 #include <strings.h>
 #include <sys/time.h>
+#include <math.h>
 
 #define ST_GIT_COMMIT "0"
 
@@ -65,6 +66,8 @@ typedef unsigned int uint;
 
 #define min(X,Y) (((X)<(Y)) ? (X) : (Y))
 #define max(X,Y) (((X)>(Y)) ? (X) : (Y))
+
+#define APPROX_EQUAL(x, y) (fabs(x - y) < 1e6)
 
 #define safe_free(ptr) do {\
     if((ptr) != NULL) {\
