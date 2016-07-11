@@ -186,6 +186,16 @@ void st_int_sort(int *A, size_t n);
  */
 void st_wt_int_sort(st_wt_int_t *A, size_t n);
 
+/**
+ * Cancat a str with format.
+ *
+ * @param[in] dst dst string buffer.
+ * @param[in] len length of dst.
+ * @param[in] fmt format string.
+ * @return NULL on error, otherwise the string buffer.
+ */
+char* st_strncatf(char *dst, size_t len, const char *fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif

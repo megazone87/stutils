@@ -984,6 +984,42 @@ FAILED:
     return -1;
 }
 
+static int unit_test_strncatf()
+{
+    char *prefix = "ans=";
+    char buf[MAX_STR_LEN];
+    char ref[MAX_STR_LEN];
+    int n;
+    int ncase;
+
+    fprintf(stderr, " Testing st_strncatf...\n");
+
+    ncase = 1;
+    /*****************************************/
+    fprintf(stderr, "    Case %d...", ncase++);
+    n = 19;
+    strcpy(buf, "Output: ");
+    snprintf(ref, MAX_STR_LEN, "%s%s%d", buf, prefix, n);
+    if(st_strncatf(buf, MAX_STR_LEN, "%s%d", prefix, n) == NULL) {
+        fprintf(stderr, "Failed\n");
+        goto FAILED;
+    }
+    if (strcmp(buf, ref) != 0) {
+        fprintf(stderr, "Failed\n");
+#ifdef _ST_TEST_DEBUG_
+        printf("REF => %s\n", ref);
+        printf("RET => %s\n", buf);
+#endif
+        goto FAILED;
+    }
+    fprintf(stderr, "Passed\n");
+
+    return 0;
+
+FAILED:
+    return -1;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -1012,6 +1048,10 @@ static int run_all_tests()
     }
 
     if (unit_test_ll2str() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_strncatf() != 0) {
         ret = -1;
     }
 

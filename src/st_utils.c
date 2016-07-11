@@ -1470,3 +1470,17 @@ void st_wt_int_sort(st_wt_int_t *A, size_t n)
 {
     qsort(A, n, sizeof(st_wt_int_t), wt_int_comp);
 }
+
+char* st_strncatf(char *dst, size_t len, const char *fmt, ...)
+{
+    char buf[MAX_LINE_LEN];
+    va_list args;
+
+    va_start(args, fmt);
+    vsnprintf(buf, MAX_LINE_LEN, fmt, args);
+    va_end(args);
+
+    strncat(dst, buf, len - strlen(buf) - 1);
+
+    return dst;
+}
