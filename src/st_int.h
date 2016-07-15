@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Wang Jian
+ * Copyright (c) 2016 Wang Jian
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef  _ST_UTILS_H_
-#define  _ST_UTILS_H_
+#ifndef  _ST_INT_H_
+#define  _ST_INT_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,21 +34,51 @@ extern "C" {
 
 #include <stutils/st_macro.h>
 
-const char* st_version();
+/**
+ * Parse int array from a comma seperated string.
+ *
+ * @param[in] str input string.
+ * @param[out] arr output int array, may be malloced/realloced.
+ * @param[out] n_arr number of ints.
+ * @return non-zero value if any error.
+ */
+int st_parse_int_array(const char *str, int **arr, int *n_arr);
 
-long make_long(unsigned int a, unsigned int b);
+/**
+ * Weighted integer.
+ */
+typedef struct _st_weighted_int_t_ {
+    int i;   /**< integer */
+    float w; /**< weight. */
+} st_wt_int_t;
 
-void split_long(long l, unsigned int *a, unsigned int *b);
+/**
+ * Parse weighted int array from a comma seperated string.
+ *
+ * @param[in] str input string.
+ * @param[out] arr output int array, may be malloced/realloced.
+ * @param[out] n_arr number of ints.
+ * @param[in] def_wt default value for weight.
+ * @return non-zero value if any error.
+ */
+int st_parse_wt_int_array(const char *str, st_wt_int_t **arr, int *n_arr,
+        float def_wt);
 
-unsigned int highest_bit_mask(unsigned int num, int overflow);
+/**
+ * Sort int array.
+ *
+ * @param[in] A array.
+ * @param[in] n length of array.
+ */
+void st_int_sort(int *A, size_t n);
 
-uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
-
-int st_permutation(void *base, size_t n, size_t sz,
-        int (*callback)(void *base, size_t n, void *args), void *args);
-
-void st_qsort(void *const pbase, size_t total_elems, size_t size,
-	    int (*cmp) (const void *, const void *, void *), void *arg);
+/**
+ * Sort weighted int array.
+ *
+ * @param[in] A array.
+ * @param[in] n length of array.
+ */
+void st_wt_int_sort(st_wt_int_t *A, size_t n);
 
 #ifdef __cplusplus
 }

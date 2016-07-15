@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Wang Jian
+ * Copyright (c) 2016 Wang Jian
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef  _ST_UTILS_H_
-#define  _ST_UTILS_H_
+#ifndef  _ST_RAND_H_
+#define  _ST_RAND_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,21 +34,33 @@ extern "C" {
 
 #include <stutils/st_macro.h>
 
-const char* st_version();
+/* The largest number rand will return (same as INT_MAX).  */
+#define ST_RAND_MAX        2147483647
+int st_rand();
+double st_random(double min, double max);
+int st_rand_r(unsigned int *seed);
+void st_srand(unsigned int seed);
 
-long make_long(unsigned int a, unsigned int b);
+void st_shuffle(int *a, size_t n);
+void st_shuffle_r(int *a, size_t n, unsigned *rand);
 
-void split_long(long l, unsigned int *a, unsigned int *b);
+typedef struct _st_gauss_r_t {
+    double mean;
+    double stdev;
+    unsigned seed;
 
-unsigned int highest_bit_mask(unsigned int num, int overflow);
+    double V1;
+    double V2;
+    double S;
+    int phase;
+} st_gauss_r_t;
 
-uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
+double st_gaussrand();
+double st_normrand(double mean, double stdev);
 
-int st_permutation(void *base, size_t n, size_t sz,
-        int (*callback)(void *base, size_t n, void *args), void *args);
-
-void st_qsort(void *const pbase, size_t total_elems, size_t size,
-	    int (*cmp) (const void *, const void *, void *), void *arg);
+void st_gauss_r_init(st_gauss_r_t *gauss, double mean,
+        double stdev, unsigned seed);
+double st_gaussrand_r(st_gauss_r_t *gauss);
 
 #ifdef __cplusplus
 }

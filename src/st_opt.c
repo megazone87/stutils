@@ -28,7 +28,7 @@
 #include <ctype.h>
 
 #include "st_log.h"
-#include "st_utils.h"
+#include "st_string.h"
 #include "st_opt.h"
 
 #define INFO_NUM 100
