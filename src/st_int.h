@@ -80,6 +80,30 @@ void st_int_sort(int *A, size_t n);
  */
 void st_wt_int_sort(st_wt_int_t *A, size_t n);
 
+/**
+ * integer segment.
+ */
+typedef struct _st_int_segment_t_ {
+    int s;   /**< start of segment */
+    union {
+        int e; /**< end of segment. */
+        int n; /**< lenght of segment. */
+    };
+} st_int_seg_t;
+
+/*
+ * Find union of n_seg sets of segs
+ *
+ * @param[in] union_segs the union set(set seg.s and seg.e).
+ * @param[in,out] n_seg number of segs in union_segs.
+ * @param[in] segs sets of segs(using seg.s and seg.n).
+ * @param[in] n_seg number of segs.
+ * @param[in] max_e max possible value of seg.e.
+ * @return non-zero value if any error.
+ */
+int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
+        st_int_seg_t *segs, int n_seg, int max_e);
+
 #ifdef __cplusplus
 }
 #endif

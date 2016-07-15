@@ -288,3 +288,115 @@ void st_wt_int_sort(st_wt_int_t *A, size_t n)
 {
     qsort(A, n, sizeof(st_wt_int_t), wt_int_comp);
 }
+
+static int st_int_seg_union_insert(st_int_seg_t *segs, int *n_seg, int s, int e)
+{
+    int i;
+    int j;
+    int n;
+
+    ST_CHECK_PARAM_EX(segs == NULL || n_seg == NULL
+            || s < 0 || e < 0 || s >= e, -1, "%d, %d", s, e);
+
+    n = *n_seg;
+
+    if (n > 0) {
+        if (e < segs[0].s) {
+            memmove(segs + 1, segs, sizeof(st_int_seg_t)*n);
+            segs[0].s = s;
+            segs[0].e = e;
+            (*n_seg)++;
+            return 0;
+        } else if (e == segs[0].s) {
+            segs[0].s = s;
+            return 0;
+        }
+    }
+
+    // skip non-intersected sets
+    for (i = 0; i < n; i++) {
+        if (s <= segs[i].e) {
+            break;
+        }
+    }
+
+    if (i == n) {
+        segs[n].s = s;
+        segs[n].e = e;
+
+        (*n_seg)++;
+        return 0;
+    }
+
+    if (e < segs[i].s) { // insert new set before ith
+        memmove(segs + i + 1, segs + i, sizeof(st_int_seg_t) * (n - i));
+        segs[i].s = s;
+        segs[i].e = e;
+        (*n_seg)++;
+    } else {// forward extend the ith set
+        for (j = i + 1; j < n; j++) {
+            if (e <= segs[j].s) {
+                break;
+            }
+        }
+
+        segs[i].s = min(s, segs[i].s);
+        if (j == n || e < segs[j].s) {
+            segs[i].e = max(e, segs[j - 1].e);
+            if (j < n) {
+                memmove(segs + i + 1, segs + j,
+                        sizeof(st_int_seg_t) * (n - j));
+            }
+            *n_seg -= (j - i - 1);
+        } else {
+            segs[i].e = max(e, segs[j].e);
+
+            if (j + 1 < n) {
+                memmove(segs + i + 1, segs + j + 1,
+                        sizeof(st_int_seg_t) * (n - (j + 1)));
+            }
+            *n_seg -= (j - i);
+        }
+    }
+
+    return 0;
+}
+
+int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
+        st_int_seg_t *segs, int n_seg, int size)
+{
+    int s;
+    int e;
+
+    int i;
+
+    ST_CHECK_PARAM(union_segs == NULL || n_union == NULL
+            || *n_union < 0  || segs == NULL, -1);
+
+    for (i = 0; i < n_seg; i++) {
+        if (segs[i].s + segs[i].n > size) {
+            s = segs[i].s;
+            e = size;
+            if (st_int_seg_union_insert(union_segs, n_union, s, e) < 0) {
+                ST_WARNING("Failed to st_int_seg_union_insert.");
+                return -1;
+            }
+
+            s = 0;
+            e = segs[i].n - (size - segs[i].s);
+            if (st_int_seg_union_insert(union_segs, n_union, s, e) < 0) {
+                ST_WARNING("Failed to st_int_seg_union_insert.");
+                return -1;
+            }
+        } else {
+            s = segs[i].s;
+            e = segs[i].s + segs[i].n;
+            if (st_int_seg_union_insert(union_segs, n_union, s, e) < 0) {
+                ST_WARNING("Failed to st_int_seg_union_insert.");
+                return -1;
+            }
+        }
+    }
+
+    return 0;
+}

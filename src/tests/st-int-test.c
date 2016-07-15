@@ -26,7 +26,9 @@
 #include <time.h>
 #include <string.h>
 
+#include "st_utils.h"
 #include "st_rand.h"
+
 #include "st_int.h"
 
 static int unit_test_parse_int_array()
@@ -289,6 +291,541 @@ FAILED:
     return -1;
 }
 
+typedef struct _int_seg_arg_t_ {
+    st_int_seg_t union_seg[256];
+    int n;
+    int sz;
+} int_seg_arg_t;
+
+static int unit_test_int_seg_union_one(void *base, size_t n_seg, void *args)
+{
+    st_int_seg_t union_seg[256];
+    int n;
+    int i;
+
+    st_int_seg_t *segs = (st_int_seg_t *)base;
+    int_seg_arg_t *ref = (int_seg_arg_t *)args;
+
+    n = 0;
+    if (st_int_seg_union(union_seg, &n, segs, n_seg, ref->sz) < 0) {
+        return -1;
+    }
+    if (n != ref->n) { return -1; }
+    for (i = 0; i < n; i++) {
+        if (union_seg[i].s != ref->union_seg[i].s) { return -1; }
+        if (union_seg[i].e != ref->union_seg[i].e) { return -1; }
+    }
+
+    return 0;
+}
+
+static int unit_test_int_seg_union()
+{
+    int_seg_arg_t ref;
+    st_int_seg_t segs[128];
+    int n_seg;
+    int ncase = 0;
+
+    ref.sz = 1000;
+
+    fprintf(stderr, "  Testing st_int_seg_union...\n");
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 2;
+    segs[0].s = 100; segs[0].n = 200;
+    segs[1].s = 800; segs[1].n = 200;
+    ref.n = 2;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 300;
+    ref.union_seg[1].s = 800; ref.union_seg[1].e = 1000;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 2;
+    segs[0].s = 100; segs[0].n = 200;
+    segs[1].s = 800; segs[1].n = 250;
+    ref.n = 3;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 50;
+    ref.union_seg[1].s = 100; ref.union_seg[1].e = 300;
+    ref.union_seg[2].s = 800; ref.union_seg[2].e = 1000;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 4;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    ref.n = 4;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 200;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 50;
+    ref.n = 5;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 50;
+    ref.union_seg[1].s = 100; ref.union_seg[1].e = 200;
+    ref.union_seg[2].s = 300; ref.union_seg[2].e = 400;
+    ref.union_seg[3].s = 500; ref.union_seg[3].e = 600;
+    ref.union_seg[4].s = 700; ref.union_seg[4].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 100;
+    ref.n = 4;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 200;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 150;
+    ref.n = 4;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 200;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 250;
+    ref.n = 4;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 250;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 300;
+    ref.n = 3;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 400;
+    ref.union_seg[1].s = 500; ref.union_seg[1].e = 600;
+    ref.union_seg[2].s = 700; ref.union_seg[2].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 450;
+    ref.n = 3;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 450;
+    ref.union_seg[1].s = 500; ref.union_seg[1].e = 600;
+    ref.union_seg[2].s = 700; ref.union_seg[2].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 500;
+    ref.n = 2;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 600;
+    ref.union_seg[1].s = 700; ref.union_seg[1].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 550;
+    ref.n = 2;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 600;
+    ref.union_seg[1].s = 700; ref.union_seg[1].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 650;
+    ref.n = 2;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 650;
+    ref.union_seg[1].s = 700; ref.union_seg[1].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 700;
+    ref.n = 1;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 750;
+    ref.n = 1;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 0; segs[4].n = 850;
+    ref.n = 1;
+    ref.union_seg[0].s =   0; ref.union_seg[0].e = 850;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 50;
+    ref.n = 4;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 200;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 100;
+    ref.n = 4;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 250;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 200;
+    ref.n = 3;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 400;
+    ref.union_seg[1].s = 500; ref.union_seg[1].e = 600;
+    ref.union_seg[2].s = 700; ref.union_seg[2].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 300;
+    ref.n = 3;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 450;
+    ref.union_seg[1].s = 500; ref.union_seg[1].e = 600;
+    ref.union_seg[2].s = 700; ref.union_seg[2].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 400;
+    ref.n = 2;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 600;
+    ref.union_seg[1].s = 700; ref.union_seg[1].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 500;
+    ref.n = 2;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 650;
+    ref.union_seg[1].s = 700; ref.union_seg[1].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 600;
+    ref.n = 1;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 150; segs[4].n = 700;
+    ref.n = 1;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 850;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 200; segs[4].n = 50;
+    ref.n = 4;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 250;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 200; segs[4].n = 100;
+    ref.n = 3;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 400;
+    ref.union_seg[1].s = 500; ref.union_seg[1].e = 600;
+    ref.union_seg[2].s = 700; ref.union_seg[2].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 200; segs[4].n = 250;
+    ref.n = 3;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 450;
+    ref.union_seg[1].s = 500; ref.union_seg[1].e = 600;
+    ref.union_seg[2].s = 700; ref.union_seg[2].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 250; segs[4].n = 25;
+    ref.n = 5;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 200;
+    ref.union_seg[1].s = 250; ref.union_seg[1].e = 275;
+    ref.union_seg[2].s = 300; ref.union_seg[2].e = 400;
+    ref.union_seg[3].s = 500; ref.union_seg[3].e = 600;
+    ref.union_seg[4].s = 700; ref.union_seg[4].e = 800;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    n_seg = 5;
+    segs[0].s = 100; segs[0].n = 100;
+    segs[1].s = 300; segs[1].n = 100;
+    segs[2].s = 500; segs[2].n = 100;
+    segs[3].s = 700; segs[3].n = 100;
+    segs[4].s = 850; segs[4].n = 50;
+    ref.n = 5;
+    ref.union_seg[0].s = 100; ref.union_seg[0].e = 200;
+    ref.union_seg[1].s = 300; ref.union_seg[1].e = 400;
+    ref.union_seg[2].s = 500; ref.union_seg[2].e = 600;
+    ref.union_seg[3].s = 700; ref.union_seg[3].e = 800;
+    ref.union_seg[4].s = 850; ref.union_seg[4].e = 900;
+    if (st_permutation(segs, n_seg, sizeof(st_int_seg_t),
+            unit_test_int_seg_union_one, &ref) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    return 0;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -298,6 +835,10 @@ static int run_all_tests()
     }
 
     if (unit_test_parse_wt_int_array() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_int_seg_union() != 0) {
         ret = -1;
     }
 
