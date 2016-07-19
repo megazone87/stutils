@@ -400,3 +400,33 @@ int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
 
     return 0;
 }
+
+int st_int_insert(int *A, int cap, int *sz, int n)
+{
+    int i;
+
+    ST_CHECK_PARAM(A == NULL || sz == NULL || *sz < 0, -1);
+
+    for (i = 0; i < *sz; i++) {
+        if (A[i] == n) {
+            return 0;
+        } else if (A[i] > n) {
+            break;
+        }
+    }
+
+    if (*sz + 1 > cap) {
+        ST_WARNING("overflow");
+        return -1;
+    }
+
+    if (i >= *sz) {
+        A[*sz] = n;
+    } else {
+        memmove(A + i + 1, A + i, (*sz - i) * sizeof(int));
+        A[i] = n;
+    }
+    *sz += 1;
+
+    return 0;
+}

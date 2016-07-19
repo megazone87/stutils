@@ -104,6 +104,17 @@ typedef struct _st_int_segment_t_ {
 int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
         st_int_seg_t *segs, int n_seg, int max_e);
 
+/*
+ * Insert and merge a integer into a sorted array.
+ *
+ * @param[in] A the int array.
+ * @param[in] cap capacity of A.
+ * @param[in, out] sz size of A.
+ * @param[in] n the integet.
+ * @return non-zero value if any error.
+ */
+int st_int_insert(int *A, int cap, int *sz, int n);
+
 #ifdef __cplusplus
 }
 #endif

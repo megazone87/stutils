@@ -826,6 +826,95 @@ static int unit_test_int_seg_union()
     return 0;
 }
 
+static int unit_test_int_insert()
+{
+    int ref[] = {1, 2, 3, 4, 5, 1000};
+    int A[128] = {0};
+    int ncase = 0;
+
+    int i, j, k, n, sz;
+
+    n = sizeof(ref) / sizeof(ref[0]) - 1;
+    fprintf(stderr, "  Testing st_int_insert...\n");
+    fprintf(stderr, "    Case %d...", ncase++);
+    for (i = 0; i < n; i++) {
+        k = 0;
+        for (j = 0; j < n; j++) {
+            if (j == i) {
+                continue;
+            }
+            A[k] = ref[j];
+            k++;
+        }
+
+        sz = n - 1;
+        if (st_int_insert(A, n, &sz, ref[i]) < 0) {
+            fprintf(stderr, "Failed\n");
+            return -1;
+        }
+        if (sz != n) {
+            fprintf(stderr, "Failed\n");
+            return -1;
+        }
+        for (j = 0; j < n; j++) {
+            if (A[j] != ref[j]) {
+                fprintf(stderr, "Failed\n");
+                return -1;
+            }
+        }
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    sz = n;
+    if (st_int_insert(A, n, &sz, ref[i]) >= 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    fprintf(stderr, "Success\n");
+
+    for (i = 0; i < n; i++) {
+        A[i] = ref[i];
+    }
+    fprintf(stderr, "    Case %d...", ncase++);
+    sz = n;
+    if (st_int_insert(A, n, &sz, ref[0]) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    if (sz != n) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    for (j = 0; j < n; j++) {
+        if (A[j] != ref[j]) {
+            fprintf(stderr, "Failed\n");
+            return -1;
+        }
+    }
+    fprintf(stderr, "Success\n");
+
+    fprintf(stderr, "    Case %d...", ncase++);
+    sz = n;
+    if (st_int_insert(A, n + 1, &sz, ref[n]) < 0) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    if (sz != n + 1) {
+        fprintf(stderr, "Failed\n");
+        return -1;
+    }
+    for (j = 0; j < n + 1; j++) {
+        if (A[j] != ref[j]) {
+            fprintf(stderr, "Failed\n");
+            return -1;
+        }
+    }
+    fprintf(stderr, "Success\n");
+
+    return 0;
+}
+
 static int run_all_tests()
 {
     int ret = 0;
@@ -839,6 +928,10 @@ static int run_all_tests()
     }
 
     if (unit_test_int_seg_union() != 0) {
+        ret = -1;
+    }
+
+    if (unit_test_int_insert() != 0) {
         ret = -1;
     }
 
