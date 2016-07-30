@@ -289,7 +289,8 @@ void st_wt_int_sort(st_wt_int_t *A, size_t n)
     qsort(A, n, sizeof(st_wt_int_t), wt_int_comp);
 }
 
-static int st_int_seg_union_insert(st_int_seg_t *segs, int *n_seg, int s, int e)
+static int st_int_seg_union_insert(st_int_seg_t *segs, int cap_seg,
+        int *n_seg, int s, int e)
 {
     int i;
     int j;
@@ -302,6 +303,10 @@ static int st_int_seg_union_insert(st_int_seg_t *segs, int *n_seg, int s, int e)
 
     if (n > 0) {
         if (e < segs[0].s) {
+            if (*n_seg >= cap_seg) {
+                ST_WARNING("Overflow");
+                return -1;
+            }
             memmove(segs + 1, segs, sizeof(st_int_seg_t)*n);
             segs[0].s = s;
             segs[0].e = e;
@@ -321,6 +326,10 @@ static int st_int_seg_union_insert(st_int_seg_t *segs, int *n_seg, int s, int e)
     }
 
     if (i == n) {
+        if (*n_seg >= cap_seg) {
+            ST_WARNING("Overflow");
+            return -1;
+        }
         segs[n].s = s;
         segs[n].e = e;
 
@@ -329,6 +338,10 @@ static int st_int_seg_union_insert(st_int_seg_t *segs, int *n_seg, int s, int e)
     }
 
     if (e < segs[i].s) { // insert new set before ith
+        if (*n_seg >= cap_seg) {
+            ST_WARNING("Overflow");
+            return -1;
+        }
         memmove(segs + i + 1, segs + i, sizeof(st_int_seg_t) * (n - i));
         segs[i].s = s;
         segs[i].e = e;
@@ -362,8 +375,8 @@ static int st_int_seg_union_insert(st_int_seg_t *segs, int *n_seg, int s, int e)
     return 0;
 }
 
-int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
-        st_int_seg_t *segs, int n_seg, int size)
+int st_int_seg_union(st_int_seg_t *union_segs, int cap_union,
+        int *n_union, st_int_seg_t *segs, int n_seg, int size)
 {
     int s;
     int e;
@@ -377,21 +390,24 @@ int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
         if (segs[i].s + segs[i].n > size) {
             s = segs[i].s;
             e = size;
-            if (st_int_seg_union_insert(union_segs, n_union, s, e) < 0) {
+            if (st_int_seg_union_insert(union_segs, cap_union,
+                        n_union, s, e) < 0) {
                 ST_WARNING("Failed to st_int_seg_union_insert.");
                 return -1;
             }
 
             s = 0;
             e = segs[i].n - (size - segs[i].s);
-            if (st_int_seg_union_insert(union_segs, n_union, s, e) < 0) {
+            if (st_int_seg_union_insert(union_segs, cap_union,
+                        n_union, s, e) < 0) {
                 ST_WARNING("Failed to st_int_seg_union_insert.");
                 return -1;
             }
         } else {
             s = segs[i].s;
             e = segs[i].s + segs[i].n;
-            if (st_int_seg_union_insert(union_segs, n_union, s, e) < 0) {
+            if (st_int_seg_union_insert(union_segs, cap_union,
+                        n_union, s, e) < 0) {
                 ST_WARNING("Failed to st_int_seg_union_insert.");
                 return -1;
             }

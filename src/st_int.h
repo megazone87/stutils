@@ -95,13 +95,14 @@ typedef struct _st_int_segment_t_ {
  * Find union of n_seg sets of segs
  *
  * @param[in] union_segs the union set(set seg.s and seg.e).
- * @param[in,out] n_seg number of segs in union_segs.
+ * @param[in,out] cap_union capacity of segs in union_segs.
+ * @param[in,out] n_union number of segs in union_segs.
  * @param[in] segs sets of segs(using seg.s and seg.n).
  * @param[in] n_seg number of segs.
  * @param[in] max_e max possible value of seg.e.
  * @return non-zero value if any error.
  */
-int st_int_seg_union(st_int_seg_t *union_segs, int *n_union,
+int st_int_seg_union(st_int_seg_t *union_segs, int cap_union, int *n_union,
         st_int_seg_t *segs, int n_seg, int max_e);
 
 /*

@@ -291,8 +291,9 @@ FAILED:
     return -1;
 }
 
+#define CAP_SEG 256
 typedef struct _int_seg_arg_t_ {
-    st_int_seg_t union_seg[256];
+    st_int_seg_t union_seg[CAP_SEG];
     int n;
     int sz;
 } int_seg_arg_t;
@@ -307,7 +308,7 @@ static int unit_test_int_seg_union_one(void *base, size_t n_seg, void *args)
     int_seg_arg_t *ref = (int_seg_arg_t *)args;
 
     n = 0;
-    if (st_int_seg_union(union_seg, &n, segs, n_seg, ref->sz) < 0) {
+    if (st_int_seg_union(union_seg, CAP_SEG, &n, segs, n_seg, ref->sz) < 0) {
         return -1;
     }
     if (n != ref->n) { return -1; }
@@ -322,7 +323,7 @@ static int unit_test_int_seg_union_one(void *base, size_t n_seg, void *args)
 static int unit_test_int_seg_union()
 {
     int_seg_arg_t ref;
-    st_int_seg_t segs[128];
+    st_int_seg_t segs[CAP_SEG];
     int n_seg;
     int ncase = 0;
 
