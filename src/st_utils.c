@@ -224,7 +224,7 @@ typedef struct
       stack size is needed (actually O(1) in this case)!  */
 
 void st_qsort(void *const pbase, size_t total_elems, size_t size,
-	    int (*cmp) (const void *, const void *, void *), void *arg)
+           int (*cmp) (const void *, const void *, void *), void *arg)
 {
   char *base_ptr = (char *) pbase;
 
@@ -415,3 +415,39 @@ int st_permutation(void *base, size_t n, size_t sz,
     return st_allrange(base, 0, n, sz, callback, args);
 }
 
+/* Testing for this function is done in st_int_insert. */
+int st_insert(void *base, int cap, size_t sz, int *num, void *elem,
+	    st_cmp_func_t cmp, void *args)
+{
+    int i;
+    st_cmp_ret_t cmp_ret;
+
+    ST_CHECK_PARAM(base == NULL || cap <= 0 || num == NULL || *num < 0, -1);
+
+    for (i = 0; i < *num; i++) {
+        cmp_ret = cmp(base + i * sz, elem, args);
+        if (cmp_ret == ST_CMP_ERR) {
+            ST_WARNING("Compare error between input elem and [%zu]th elem.", i);
+            return -1;
+        } else if (cmp_ret == ST_CMP_EQUAL) {
+            return i;
+        } else if (cmp_ret == ST_CMP_GREATER) {
+            break;
+        }
+    }
+
+    if (*num + 1 > cap) {
+        ST_WARNING("overflow");
+        return -1;
+    }
+
+    if (i >= *num) {
+        memcpy(base + (*num) * sz, elem, sz);
+    } else {
+        memmove(base + (i + 1) * sz, base + i * sz, (*num - i) * sz);
+        memcpy(base + i * sz, elem, sz);
+    }
+    *num += 1;
+
+    return *num - 1;
+}

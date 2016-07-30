@@ -48,8 +48,48 @@ int st_permutation(void *base, size_t n, size_t sz,
         int (*callback)(void *base, size_t n, void *args), void *args);
 
 void st_qsort(void *const pbase, size_t total_elems, size_t size,
-	    int (*cmp) (const void *, const void *, void *), void *arg);
+           int (*cmp) (const void *, const void *, void *), void *arg);
 
+/*
+ * Return value for a comparison function
+ *
+ * @param[in] elem1 first elem.
+ * @param[in] elem2 second elem.
+ * @param[in] args extra args.
+ * @return a st_cmp_ret_t.
+ */
+typedef enum st_cmp_ret_t_ {
+    ST_CMP_ERR     = -2, /**< error occurs when doing comparison. */
+    ST_CMP_LESS    = -1, /**< first elem is less than second elem. */
+    ST_CMP_EQUAL   = 0,  /**< first elem is equal to second elem. */
+    ST_CMP_GREATER = 1,  /**< first elem is greater than second elem. */
+} st_cmp_ret_t;
+
+/*
+ * comparison function
+ *
+ * @param[in] elem1 first elem.
+ * @param[in] elem2 second elem.
+ * @param[in] args extra args.
+ * @return a st_cmp_ret_t.
+ */
+typedef st_cmp_ret_t (*st_cmp_func_t) (const void *elem1, const void *elem2,
+        void *args);
+
+/*
+ * Insert and merge an elem into a sorted array.
+ *
+ * @param[in] base the array.
+ * @param[in] cap capacity of array.
+ * @param[in] sz size of one elem.
+ * @param[in, out] num number of array.
+ * @param[in] elem the elem to be inserted.
+ * @param[in] cmp the comparison function.
+ * @param[in] args args to the comparison function.
+ * @return the index of inserted position, negtive value if any error.
+ */
+int st_insert(void *base, int cap, size_t sz, int *num, void *elem,
+	    st_cmp_func_t cmp, void *arg);
 #ifdef __cplusplus
 }
 #endif
