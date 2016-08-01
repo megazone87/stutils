@@ -19,7 +19,8 @@ INCS = st_dict.h \
        st_semaphore.h \
        st_int.h \
        st_string.h \
-       st_rand.h
+       st_rand.h \
+       st_mem.h
 
 SRCS = st_dict.c \
        st_alphabet.c \
@@ -35,17 +36,20 @@ SRCS = st_dict.c \
        st_semaphore.c \
        st_int.c \
        st_string.c \
-       st_rand.c
+       st_rand.c \
+       st_mem.c
 
 TESTS = tests/st-utils-test \
         tests/st-conf-test \
         tests/st-int-test \
-        tests/st-string-test
+        tests/st-string-test \
+        tests/st-mem-test
 
 VAL_TESTS = tests/st-utils-test \
             tests/st-conf-test \
             tests/st-int-test \
-            tests/st-string-test
+            tests/st-string-test \
+            tests/st-mem-test
 
 .PHONY: all
 all:
