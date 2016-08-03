@@ -67,6 +67,24 @@ void* st_aligned_realloc(void *ptr, size_t size, size_t alignment);
  */
 void st_aligned_free(void *p);
 
+/*
+ * Get alignment of a aligned memory block.
+ *
+ * @param[in] ptr memory block. This pointer must be the one returned
+ *                from st_aligned_malloc or st_aligned_realloc.
+ * @return the alignment of block
+ */
+size_t st_aligned_alignment(void *p);
+
+/*
+ * Get size of a aligned memory block.
+ *
+ * @param[in] ptr memory block. This pointer must be the one returned
+ *                from st_aligned_malloc or st_aligned_realloc.
+ * @return the size of block
+ */
+size_t st_aligned_size(void *p);
+
 #ifdef __cplusplus
 }
 #endif

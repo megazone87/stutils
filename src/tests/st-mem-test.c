@@ -48,6 +48,14 @@ static int unit_test_st_aligned_malloc()
 #ifdef _ST_TEST_DEBUG_
         printf("%zx, %p\n", alignment, ptr);
 #endif
+        if(st_aligned_alignment(ptr) != alignment) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+        if(st_aligned_size(ptr) != size) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
         if(((size_t)ptr & (alignment - 1)) != 0) {
             fprintf(stderr, "Failed\n");
             goto FAILED;
@@ -79,7 +87,7 @@ static int unit_test_st_aligned_realloc()
 {
 #define N 12
     char *ptr = NULL;
-    size_t size = 123;
+    size_t size = 123, add, a;
     size_t alignment;
     int i;
     int ncase;
@@ -95,6 +103,14 @@ static int unit_test_st_aligned_realloc()
 #ifdef _ST_TEST_DEBUG_
         printf("%zx, %p\n", alignment, ptr);
 #endif
+        if(st_aligned_alignment(ptr) != alignment) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+        if(st_aligned_size(ptr) != size) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
         if(((size_t)ptr & (alignment - 1)) != 0) {
             fprintf(stderr, "Failed\n");
             goto FAILED;
@@ -108,14 +124,56 @@ static int unit_test_st_aligned_realloc()
     for (i = 4; i <= N; i++) {
         alignment = 1 << i;
         ptr = st_aligned_malloc(size, alignment);
+        for (a = 0; a < size; a++) {
+            ptr[a] = a;
+        }
         assert(ptr != NULL);
-        ptr = st_aligned_realloc(ptr, size + 10, alignment);
+        add = 10;
+        ptr = st_aligned_realloc(ptr, size + add, alignment);
 #ifdef _ST_TEST_DEBUG_
         printf("%zx, %p\n", alignment, ptr);
 #endif
+        if(st_aligned_alignment(ptr) != alignment) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+        if(st_aligned_size(ptr) != size + add) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
         if(((size_t)ptr & (alignment - 1)) != 0) {
             fprintf(stderr, "Failed\n");
             goto FAILED;
+        }
+        for (a = 0; a < size; a++) {
+            if (ptr[a] != a) {
+                fprintf(stderr, "Failed\n");
+                goto FAILED;
+            }
+        }
+
+        add += 25;
+        ptr = st_aligned_realloc(ptr, size + add, alignment);
+#ifdef _ST_TEST_DEBUG_
+        printf("%zx, %p\n", alignment, ptr);
+#endif
+        if(st_aligned_alignment(ptr) != alignment) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+        if(st_aligned_size(ptr) != size + add) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+        if(((size_t)ptr & (alignment - 1)) != 0) {
+            fprintf(stderr, "Failed\n");
+            goto FAILED;
+        }
+        for (a = 0; a < size; a++) {
+            if (ptr[a] != a) {
+                fprintf(stderr, "Failed\n");
+                goto FAILED;
+            }
         }
         safe_st_aligned_free(ptr);
         fprintf(stderr, "Passed\n");

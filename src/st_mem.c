@@ -135,3 +135,27 @@ void st_aligned_free(void *p)
 
     free(p1);
 }
+
+size_t st_aligned_alignment(void *p)
+{
+    size_t *p3;
+
+    if (p == NULL) {
+        return 0;
+    }
+
+    p3 = (size_t *)p;
+    return p3[-2];
+}
+
+size_t st_aligned_size(void *p)
+{
+    size_t *p3;
+
+    if (p == NULL) {
+        return 0;
+    }
+
+    p3 = (size_t *)p;
+    return p3[-3];
+}
